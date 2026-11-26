@@ -12,6 +12,8 @@
 
     <!-- story background -->
     <div class="story-background" aria-hidden="true">
+
+        <!-- character infront of background-->
         <div class="vn-character">
             <img id="story-sprite" src="images/silentvoice.jpg" alt="Guide Character">
         </div>
@@ -21,8 +23,11 @@
     <main class="screen main-menu" id="main">
         
         <!-- title -->
-        <h1 class="game-title">Mist Of East</h1>
+        <h1 class="game-title">Paman Buas™</h1>
+        <h2 class="game-title">Presents</h2>
         <nav class="main-menu-list">
+
+            <!-- button click links -->
             <ul>
                 <li><a href="#story" data-dialogue="story">Start Adventure</a></li>
                 <li><a href="#options">Options</a></li>
@@ -30,14 +35,27 @@
             </ul>
         </nav>
 
+        <!-- el paman buas footer -->
         <footer class="main-menu-footer">
-            <div class="footer-text">Paman Buas Foundation™ ©</div>
+            <div class="footer-text">Learning disguised as an interactive game. </div>
         </footer>
     </main>
 
-    <!-- Dialogue Overlay (Merged into one #story section with #vn-choices) -->
+    <!-- Dialogue Overlay -->
     <section class="screen in-adventure vn-overlay" id="story">
+
+        <!-- skip button redundant?
         <a href="#select-topic" id="vn-skip-btn" class="vn-skip">skip >></a>
+        -->
+
+        <!-- paper pop up-->
+        <div class="paper-card" id="paper" hidden>
+            <div class = "paper-header">
+                <h3 id = "paper-title"></h3>
+            </div>
+            <div class="paper-body" id="paper-body"></div>
+            <button type="button" id = "paper-close" title="put away">put away</button>
+        </div>
 
         <div class="vn-choices" id="vn-choices"></div>
 
@@ -48,7 +66,8 @@
         </div>
     </section>
 
-    <!-- SELECT TOPIC -->
+<!-- Redundant?, selection menu
+
     <main class="screen in-adventure dim-story main-menu" id="select-topic">
         <h1 class="game-title">MISTUH bis</h1>
         <nav class="select-topic-list">
@@ -60,69 +79,65 @@
             </ul>
         </nav>
     </main>
+-->
 
-    <!-- MATH LESSON -->
-    <main class="screen in-adventure dim-story teach-menu" id="math-teach">
-        <h1 class="teach-title">meth</h1>
+    <!-- change to my omb name card? -->
+    <main class="screen in-adventure dim-story omb-menu" id="my-omb-card">
+        <h1 class="omb-title">enter your name</h1>
 
-        <!-- panel -->
-        <div id="math-panel">
-            <div class="center-panel">
-                <div class="panel-title">
-                    <h3>METH</h3>
-                </div>
+        <!-- card -->
+        <div id="my-omb-card-box">
 
-                <div class="panel-scroll-area">
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefadfadfadfadfadfadfadfdafadfasdaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
-                </div>
+            <!-- text -->
+            <div class="my-omb-card">
+                <h3>OMB CARD </h3>
             </div>
+
         </div>
         
-        <nav class="teach-navigation">
+        <!-- back button -->
+        <nav class="omb-navigation">
             <ul>
                 <li><a href="#main">Back to Menu</a></li>
             </ul>
         </nav>
     </main>
-    
-    <!-- PHYSICS LESSON -->
-    <main class="screen in-adventure dim-story teach-menu" id="physics-teach">
-        <h1 class="teach-title">Pisiks</h1>
-        
+
+    <!-- change to my omb name card? -->
+    <main class="screen in-adventure dim-story omb-menu" id="her-omb-card">
+        <h1 class="omb-title">enter your name</h1>
+
         <!-- panel -->
-        <div id="physics-panel">
-            <div class="center-panel">
-                <div class="panel-title">
-                    <h3>PISIKS</h3>
-                </div>
+        <div id="her-omb-card-box">
+
+            <div class="her-omb-card-center">
                 
-                <div class="panel-scroll-area">
-                    <p> eafaeafaefaef</p>
-                    <p> eafaeafaefaef</p>
+                <div class="omb-panel-title">
+                    <h3>METH</h3>
                 </div>
+
+               
             </div>
         </div>
+        
+        <nav class="omb-navigation">
+            <ul>
+                <li><a href="#main">Back to Menu</a></li>
+            </ul>
+        </nav>
+    </main>
+   
     
-        <nav class="teach-navigation">
+    <!-- change to handrwiting panel? -->
+    <main class="screen in-adventure dim-story paper-menu" id="paper-screen">
+        <h1 class="paper-title">Pisiks</h1>
+        
+        <!-- panel -->
+        <div id="paper-panel">
+            
+        </div>
+    
+        <nav class="omb-navigation">
             <ul>
                 <li><a href="#main">Back to Menu</a></li>
             </ul>
@@ -410,6 +425,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         // SIM STATE (Tracks choices, stats, and unlocks across the game)
         const simState = {
+            playerName: "",
             affection: 0,
             somethingUnlocked: false
         };  
@@ -429,13 +445,39 @@
                         name: "Paman Buas",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "Hiiiiiiii :>"
+                        text: "...",
+                        paper: { //kertas pop up kyk gini
+                            title: "OMB CARD",
+                            html: 
+                            `
+                            <div class="paper-row">
+                                <h4>certified student</h4>
+                                <span class="paper-stamp">awdawd</span>
+
+                                <hr class = "paper-divider">
+                                <div class= "paper-space"></div>
+                                
+                            </div>
+
+                            <div class="paper-fields">
+                                <div class="paper-field">
+                                    <label for="player-name-input">Name:</label>
+                                    <input type="text" id="player-name-input" placeholder="your name...">
+                                    </div>
+
+                                <div class="paper-field">
+                                    <label for="player-major-input">major:</label>
+                                    <input type="text" id="player-major-input" placeholder="your major...">
+                                </div>
+                             </div>
+                            `
+                        }
                     },
                      {
                         name: "Paman Buas",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "Go fuck yourself kys *n word hard r*"
+                        text: "Goodbye, {name}" //player name kyk gini
                     },
                     {
                         name: "Paman Buas",
@@ -497,13 +539,13 @@
                     },
                     {
                         name: "Kein",
-                        text: "ok fuck you kys"
+                        text: "ok"
                     }
                 ]
             }
         };
 
-        // initialize
+        // initialize constants
         const stageEl         = document.querySelector(".story-background");
         const stageSprite     = document.getElementById("story-sprite");
         const vnOverlay       = document.getElementById("story");
@@ -511,9 +553,13 @@
         const vnText          = document.getElementById("vn-text");
         const vnChoices       = document.getElementById("vn-choices");
         const vnNextIndicator = document.querySelector(".vn-next-indicator");
-        const vnSkipBtn       = document.getElementById("vn-skip-btn");
+        //const vnSkipBtn       = document.getElementById("vn-skip-btn");
         const optionsBackBtn  = document.getElementById("options-back-btn");
         const accToggle       = document.getElementById("acc-toggle");
+        const storyPaper      = document.getElementById("paper");
+        const storyPaperTitle = document.getElementById("paper-title");
+        const storyPaperBody  = document.getElementById("paper-body");
+        const storyPaperClose = document.getElementById("paper-close");
 
         // Remember previous screen for #options Back button
         document.querySelectorAll('a[href="#options"]').forEach((btn) => {
@@ -538,10 +584,59 @@
         let currentLine = 0;
         let hasActiveChoices = false;
 
+        function hidePaper() {
+            if (!storyPaper || storyPaper.hidden) return;
+            storyPaper.classList.add("closing");
+            setTimeout(() => {
+                storyPaper.hidden = true;
+                storyPaper.classList.remove("closing");
+            }, 200);
+        }
+
+        function updatePaper(paperData) {
+            if (!storyPaper) return;
+
+            if (paperData === "keep") return;
+
+            if (!paperData) {
+                hidePaper();
+                return;
+            }
+
+            storyPaperTitle.textContent = paperData.title || "";
+            storyPaperBody.innerHTML = paperData.html || "";
+            storyPaper.classList.remove("closing");
+            storyPaper.hidden = false;
+
+            const nameInput = document.getElementById("player-name-input");
+            if (nameInput) {
+                nameInput.value = simState.playerName;
+            }
+
+            storyPaper.style.animation = "none";
+            void storyPaper.offsetWidth;
+            storyPaper.style.animation = "";
+        }
+
+        if (storyPaperBody) {
+            storyPaperBody.addEventListener("input", (event) => {
+                if (event.target.id === "player-name-input") {
+                    simState.playerName = event.target.value.trim();
+                }
+            });
+        }
+
+        if (storyPaperClose) {
+            storyPaperClose.addEventListener("click", (event) => {
+                event.stopPropagation();
+                hidePaper();
+            });
+        }
+
         function loadScene(sceneKey) {
             activeSceneKey = dialogues[sceneKey] ? sceneKey : "story";
             currentLine = 0;
-            vnSkipBtn.href = dialogues[activeSceneKey].nextScreen;
+            //vnSkipBtn.href = dialogues[activeSceneKey].nextScreen;
             showLine(0);
         }
 
@@ -589,9 +684,10 @@
         function showLine(index) {
             const scene = dialogues[activeSceneKey];
             const line = scene.lines[index];
+            const displayName = simState.playerName || "Player";
 
-            vnName.textContent = line.name || "";
-            vnText.textContent = line.text;
+            vnName.textContent = (line.name || "").replaceAll("{name}", displayName);
+            vnText.textContent = (line.text || "").replaceAll("{name}", displayName);
             AudioManager.playSFX("blip");
 
             if (line.sprite && stageSprite) {
@@ -606,6 +702,7 @@
                 stageEl.style.setProperty("--scene-bg", `url('${line.bg}')`);
             }
 
+            updatePaper(line.paper);
             renderChoices(line.choices);
 
             // Hook up sign language challenge if this dialogue line defines one
@@ -659,11 +756,12 @@
         });
 
         vnOverlay.addEventListener("click", (event) => {
-            if (event.target.closest(".vn-skip") || hasActiveChoices) return;
+            if (event.target.closest(".vn-skip, .paper-card") || hasActiveChoices) return;
             advanceDialogue();
         });
 
         document.addEventListener("keydown", (event) => {
+            if (event.target.matches("input, textarea")) return;
             const isDialogueOpen = window.location.hash === "#story";
             if (isDialogueOpen && !hasActiveChoices && (event.key === " " || event.key === "Enter")) {
                 event.preventDefault();
@@ -672,12 +770,14 @@
         });
 
         window.addEventListener("hashchange", () => {
-            updateMusicVisual(bgmTracks[currentTrackIndex]);
+            if (window.location.hash === "#story") {
+                showLine(currentLine);
+            }
         });
     });
 </script>
 
-// JUMPSCARE TRANSITION
+<!-- JUMPSCARE TRANSITION -->
 <script>
 const learnMoreButton = document.getElementById("learnMoreButton");
 const jumpscare = document.getElementById("jumpscare");
@@ -698,15 +798,14 @@ learnMoreButton.addEventListener("click", function(event) {
 
         // Start the 3-second delay + 3-second animation
         jumpscare.classList.add("shrinking");
-
-    window.addEventListener("hashchange", function() {
-        if (window.location.hash !== "#LearnMore") {
-         jumpscare.style.display = "none";
-         jumpscare.classList.remove("shrinking");
-    }
+    }, 100);
 });
 
-    }, 100);
+window.addEventListener("hashchange", function() {
+    if (window.location.hash !== "#LearnMore") {
+        jumpscare.style.display = "none";
+        jumpscare.classList.remove("shrinking");
+    }
 });
 </script>
 
