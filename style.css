@@ -507,6 +507,95 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
         transform: translate(-50%, -40%) scale(0.92);
     }
 }
+/* paper ends */
+
+/* affection meter starts */
+.affection-hud {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    width: min(88vw, 340px);
+    padding: 12px 16px;
+    background-color: var(--panel-bg);
+    color: var(--pink-accent);
+    border: 4px solid var(--pink-accent);
+    border-radius: 12px;
+    box-shadow: 6px 6px 0px var(--pink-accent);
+    font-weight: bold;
+    pointer-events: none;
+
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.affection-hud[hidden] {
+    display: none;
+}
+
+.affection-hud.visible {
+    opacity: 1;
+}
+
+.affection-hud.shaking {
+    animation: affectionShake 0.55s ease-in-out;
+}
+
+.affection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+}
+
+#affection-delta {
+    color: var(--text-cyan);
+    margin-left: 4px;
+}
+
+.affection-track {
+    width: 100%;
+    height: 16px;
+    background-color: var(--cyan-bg);
+    border: 3px solid var(--pink-accent);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.affection-fill {
+    width: 0%;
+    height: 100%;
+    background-color: var(--pink-accent);
+    transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes affectionShake {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    15%      { transform: translateX(calc(-50% - 7px)) rotate(-1.5deg); }
+    30%      { transform: translateX(calc(-50% + 7px)) rotate(1.5deg); }
+    45%      { transform: translateX(calc(-50% - 5px)) rotate(-1deg); }
+    60%      { transform: translateX(calc(-50% + 5px)) rotate(1deg); }
+    75%      { transform: translateX(calc(-50% - 2px)) rotate(-0.5deg); }
+}
+
+/* locked dialogue when affection too low lols */
+.vn-choice-btn.locked {
+    background-color: #d8d8d8;
+    color: #666666;
+    border-color: #888888;
+    box-shadow: 5px 5px 0px #888888;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.vn-choice-btn.locked:hover {
+    background-color: #d8d8d8;
+    color: #666666;
+    transform: none;
+}
+/* affection bar ends */
 
 /* character sprites */
 .vn-character {
@@ -827,6 +916,7 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     transition: width 0.08s linear;
 }
 /* Camera end */
+
 
 
 

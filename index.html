@@ -51,10 +51,8 @@
 
         <!-- paper pop up-->
         <div class="paper-card" id="paper" hidden>
-                <h3 id = "paper-title"></h3>
-            </div>
             <div class="paper-body" id="paper-body"></div>
-            <button type="button" id = "paper-close" title="put away">put away</button>
+            <button type="button" id="paper-close" title="put away">put away</button>
         </div>
 
         <div class="vn-choices" id="vn-choices"></div>
@@ -166,16 +164,16 @@
     </main>
 
     <!-- LEARN MORE -->
-<main class="screen main-menu" id="LearnMore">
-    <h1 class="game-title">About Us</h1>
+    <main class="screen main-menu" id="LearnMore">
+        <h1 class="game-title">About Us</h1>
 
-    <nav class="main-menu-list">
-        <ul>
-            <li><a href="#" id="scareButton">awdawd</a></li>
-            <li><a href="#main">Back to Menu</a></li>
-        </ul>
-    </nav>
-</main>
+        <nav class="main-menu-list">
+            <ul>
+                <li><a href="#" id="scareButton">awdawd</a></li>
+                <li><a href="#main">Back to Menu</a></li>
+            </ul>
+        </nav>
+    </main>
 
     <!-- accessibility widget -->
     <aside class="acc-widget" aria-label="Accessibility Options">
@@ -189,8 +187,8 @@
 
             <!-- camera toggle -->
             <label class="acc-item acc-option">
-            <input type="checkbox" id="opt-cam">
-            <span>camera ui</span>
+                <input type="checkbox" id="opt-cam">
+                <span>camera ui</span>
             </label>
             
             <!-- option 2-->
@@ -227,18 +225,30 @@
         </div>
     </div>
 
+    <!-- AFFECTION METER POPUP -->
+    <div class="affection-hud" id="affection-hud" hidden>
+        <div class="affection-header">
+            <span>♥ AFFECTION</span>
+            <span id="affection-score-text">0% <small id="affection-delta"></small></span>
+        </div>
+        <div class="affection-track">
+            <div class="affection-fill" id="affection-fill"></div>
+        </div>
+    </div>
+
     <!-- Jumpscare overlay -->
-<div id="jumpscare">
-    <img src="images/horse.webp" alt="BOO!">
-</div>
+    <div id="jumpscare">
+        <img src="images/horse.webp" alt="BOO!">
+    </div>
 
-<div id="secretSongVisual">
-    <img src="images/tuff.png" alt="Secret Song Easter Egg">
-</div>
+    <div id="secretSongVisual">
+        <img src="images/tuff.png" alt="Secret Song Easter Egg">
+    </div>
 
-<div id="musicVisual">
-    <img id="musicVisualImage" src="" alt="Music artwork">
-</div>
+    <div id="musicVisual">
+        <img id="musicVisualImage" src="" alt="Music artwork">
+    </div>
+
 <!-- script land -->
 
 <!-- audio script -->
@@ -250,18 +260,19 @@
             hover: "audio/hover.mp3",
             blip:  "audio/blip.mp3",
             start: "audio/click.mp3",
-            crystal: "audio/crystal_sfx.mp3" 
+            crystal: "audio/crystal_sfx.mp3",
+            affection: "audio/crystal_sfx.mp3" 
         };
 
         // MUSIC HERE ANJAY
         const bgmTracks = [
-            { key: "menu",    title: "Main Theme",    src: "audio/music_1.mp3" },
-            { key: "mrbeast", title: "im mr beast.",  src: "audio/balls.mp3" },
-            { key: "idk", title: "tuff",  src: "audio/music_2.mp3" },
-            { key: "secret", title: "???", src: "audio/tuff.mp3",image:"images/tuff.png", spin:true },
-            { key: "ponker", title: "ponk", src: "audio/ponks.mp3" },
-            { key: "ego", title: "egoism is when no", src: "audio/ego.mp3", image:"images/maxwhenno.jpg" },
-            { key: "rus", title: "h", src: "audio/kambing.mp3" }
+            { key: "menu",    title: "Main Theme",         src: "audio/music_1.mp3" },
+            { key: "mrbeast", title: "im mr beast.",       src: "audio/balls.mp3" },
+            { key: "idk",     title: "tuff",               src: "audio/music_2.mp3" },
+            { key: "secret",  title: "???",                src: "audio/tuff.mp3", image: "images/tuff.png", spin: true },
+            { key: "ponker",  title: "ponk",               src: "audio/ponks.mp3" },
+            { key: "ego",     title: "egoism is when no",  src: "audio/ego.mp3",  image: "images/maxwhenno.jpg" },
+            { key: "rus",     title: "h",                  src: "audio/kambing.mp3" }
         ];
 
         // Load saved volumes from localStorage (defaults: SFX 100%, Music 50%)
@@ -269,14 +280,10 @@
         let bgmVolume = parseFloat(localStorage.getItem("bgmVol") ?? "0.5");
         let currentTrackIndex = 0;
         let pendingTrack = null;
-        const secretTrackKey = "secret";
-
-
 
         const bgmPlayer = new Audio();
         bgmPlayer.loop = true;
         bgmPlayer.volume = bgmVolume;
-
 
         window.addEventListener("hashchange", () => {
             updateMusicVisual(bgmTracks[currentTrackIndex]);
@@ -307,7 +314,6 @@
             visualImage.classList.toggle("spinning", !!track.spin);
         }
 
-
         function playBGM(index = currentTrackIndex) {
             currentTrackIndex = index % bgmTracks.length;
             const track = bgmTracks[currentTrackIndex];
@@ -319,15 +325,15 @@
 
             bgmPlayer.volume = bgmVolume;
 
-
             bgmPlayer.play().then(() => {
                 pendingTrack = null;
-        }).catch(() => {
-             pendingTrack = currentTrackIndex;
-         });
+            }).catch(() => {
+                pendingTrack = currentTrackIndex;
+            });
 
             return track;
         }
+
         function nextBGM() {
             return playBGM(currentTrackIndex + 1);
         }
@@ -432,7 +438,7 @@
     
         const dialogues = {
             story: {
-                nextScreen: "#select-topic",
+                nextScreen: "#main", // Change to "#select-topic" if you uncomment #select-topic
                 lines: [
                     {
                         name: "me",
@@ -447,58 +453,52 @@
                         size: "120vh",
                         text: "...",
                         paper: { //kertas pop up kyk gini MUKA W GANTI NANTI PLIS
-                            title: "OMB CARD",
-                            html: 
-                            `
-                            <div class="paper-card" id="paper-card">
-                                <div class="paper-title">
-                                    <h3>KARTU IDENTITAS</h3>
-                                    <h4>PEJUANG KEMBANG SEPATU</h4>
+                            html: `
+                            <div class="paper-title">
+                                <h3>KARTU IDENTITAS</h3>
+                                <h4>PEJUANG KEMBANG SEPATU</h4>
+                            </div>
+                        
+                            <div class="paper-content">
+                                <div class="paper-photo">
+                                    <img src="images/orangdongo.jpeg" alt="muka ganteng/cantik njay"> 
                                 </div>
-                            
-                                <div class="paper-content">
-                                    <div class="paper-photo">
-                                        <img src="images/orangdongo.jpeg" alt="muka ganteng/cantik njay"> 
+                        
+                                <div class="paper-info">
+                                    <div class="paper-field">
+                                        <label for="player-name-input">NAMA</label>
+                                        <input type="text" id="player-name-input" placeholder="...">
                                     </div>
-                            
-                                    <div class="paper-info">
-                                        <div class="paper-field">
-                                            <label for="player-name-input">NAMA</label>
-                                            <input type="text" id="player-name-input" placeholder="...">
-                                        </div>
-                                    
-                                        <div class="paper-field">
-                                            <label for="player-nim-input">NIM</label>
-                                            <input type="text" id="player-nim-input" placeholder="...">
-                                        </div>
-                                    
-                                        <div class="paper-field">
-                                            <label for="player-domicile-input">DOMISILI</label>
-                                            <input type="text" id="player-domicile-input" placeholder="...">
-                                        </div>
-                                    
-                                        <div class="paper-field">
-                                            <label for="player-major-input">JURUSAN</label>
-                                            <input type="text" id="player-major-input" placeholder="...">
-                                        </div>
-                                    
-                                        <div class="paper-field">
-                                            <label for="player-hobby-input">HOBI</label>
-                                            <input type="text" id="player-hobby-input" placeholder="...">
-                                        </div>
+                                
+                                    <div class="paper-field">
+                                        <label for="player-nim-input">NIM</label>
+                                        <input type="text" id="player-nim-input" placeholder="...">
+                                    </div>
+                                
+                                    <div class="paper-field">
+                                        <label for="player-domicile-input">DOMISILI</label>
+                                        <input type="text" id="player-domicile-input" placeholder="...">
+                                    </div>
+                                
+                                    <div class="paper-field">
+                                        <label for="player-major-input">JURUSAN</label>
+                                        <input type="text" id="player-major-input" placeholder="...">
+                                    </div>
+                                
+                                    <div class="paper-field">
+                                        <label for="player-hobby-input">HOBI</label>
+                                        <input type="text" id="player-hobby-input" placeholder="...">
                                     </div>
                                 </div>
-                            
-                                <div class="paper-decoration">
-                                    <span>✿x</span>
-                                </div>
-                            
-                                <button id="paper-close">put away</button>
+                            </div>
+                        
+                            <div class="paper-decoration">
+                                <span>✿x</span>
                             </div>
                             `
                         }
                     },
-                     {
+                    {
                         name: "Paman Buas",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
@@ -518,8 +518,8 @@
                         text: "meanwhile at wemen...",
                         // Example: add signChallenge to any line once recorded into STATIC_SIGNS / DYNAMIC_SIGNS:
                         // signChallenge: {
-                        //     sign: "TERIMA_KASIH",
-                        //     prompt: "Perform sign: TERIMA KASIH",
+                        //     sign: "a",
+                        //     prompt: "Perform sign: A",
                         //     nextScene: "Timeline_1"
                         // },
                         choices: [
@@ -543,7 +543,7 @@
 
             // Timeline 1 (Moved outside story.lines to be a top-level scene)
             Timeline_1: {
-                nextScreen: "#select-topic",
+                nextScreen: "#main", // Change to "#select-topic" if you uncomment #select-topic
                 lines: [
                     {
                         name: "Narrator",
@@ -578,46 +578,31 @@
         const vnText          = document.getElementById("vn-text");
         const vnChoices       = document.getElementById("vn-choices");
         const vnNextIndicator = document.querySelector(".vn-next-indicator");
+        
         //const vnSkipBtn       = document.getElementById("vn-skip-btn");
         const optionsBackBtn  = document.getElementById("options-back-btn");
         const accToggle       = document.getElementById("acc-toggle");
+        
+        // PAPER STARTS
+        // constant for da paper
         const storyPaper      = document.getElementById("paper");
         const storyPaperTitle = document.getElementById("paper-title");
         const storyPaperBody  = document.getElementById("paper-body");
         const storyPaperClose = document.getElementById("paper-close");
 
-        // Remember previous screen for #options Back button
-        document.querySelectorAll('a[href="#options"]').forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const currentScreen = window.location.hash || "#main";
-
-                if (currentScreen !== "#options" && optionsBackBtn) {
-                    optionsBackBtn.href = currentScreen;
-                }
-
-                if (accToggle) {
-                    accToggle.checked = false;
-                }
-            });
-        });
-
-        document.querySelectorAll('a[href="#"]').forEach((link) => {
-            link.addEventListener("click", (event) => event.preventDefault());
-        });
-
-        let activeSceneKey = "story";
-        let currentLine = 0;
-        let hasActiveChoices = false;
-
+        // hide da paper
         function hidePaper() {
             if (!storyPaper || storyPaper.hidden) return;
             storyPaper.classList.add("closing");
+
+            // if open for too long it closes
             setTimeout(() => {
                 storyPaper.hidden = true;
                 storyPaper.classList.remove("closing");
             }, 200);
         }
 
+        // thingamajig dont touch 
         function updatePaper(paperData) {
             if (!storyPaper) return;
 
@@ -627,8 +612,8 @@
                 hidePaper();
                 return;
             }
-
-            storyPaperTitle.textContent = paperData.title || "";
+            //dont touchhhhh
+            if (storyPaperTitle) storyPaperTitle.textContent = paperData.title || "";
             storyPaperBody.innerHTML = paperData.html || "";
             storyPaper.classList.remove("closing");
             storyPaper.hidden = false;
@@ -657,11 +642,112 @@
                 hidePaper();
             });
         }
+        //PAPER ENDS
+
+       
+        // AFFECTION THINGY STARTS
+        // constant for da affections
+        const affectionHud       = document.getElementById("affection-hud");
+        const affectionFill      = document.getElementById("affection-fill");
+        const affectionScoreText = document.getElementById("affection-score-text");
+        const affectionDelta     = document.getElementById("affection-delta");
+        let affectionTimers = [];
+
+        //clear timer
+        function clearAffectionTimers() {
+            affectionTimers.forEach((id) => clearTimeout(id));
+            affectionTimers = [];
+        }
+        
+        function changeAffection(amount) {
+            const prevScore = simState.affection;
+            const nextScore = Math.max(0, Math.min(100, prevScore + amount)); //increments da affection
+            simState.affection = nextScore; // updatess
+
+            if (!affectionHud || !affectionFill || !affectionScoreText) return;
+
+            clearAffectionTimers();
+
+            // Set bar & text to the OLDDD value before fading in
+            affectionHud.classList.remove("visible", "shaking");
+            affectionFill.style.transition = "none";
+            affectionFill.style.width = `${prevScore}%`; 
+            affectionScoreText.firstChild.textContent = `${prevScore}% `;
+            if (affectionDelta) affectionDelta.textContent = "";
+
+            affectionHud.hidden = false;
+            void affectionHud.offsetWidth; // force reflow so fade in triggers cleanly
+
+            // Fade in toggle
+            affectionHud.classList.add("visible");
+
+            // after fade in, shake + play sfx + animate bar and score up
+            const actTimer = setTimeout(() => {
+                affectionFill.style.transition = "";
+                affectionFill.style.width = `${nextScore}%`;
+                
+                //why javascript why
+                const sign = amount >= 0 ? `+${amount}` : `${amount}`;
+                affectionScoreText.firstChild.textContent = `${nextScore}% `;
+                if (affectionDelta) affectionDelta.textContent = `(${sign})`;
+
+                affectionHud.classList.remove("shaking");
+                void affectionHud.offsetWidth;
+                affectionHud.classList.add("shaking");
+
+                //la soundfx
+                if (window.AudioManager) {
+                    AudioManager.playSFX("affection");
+                }
+            }, 400); //0.4 seconds -> IM IN
+
+            // remove shaking and visibile
+            const fadeOutTimer = setTimeout(() => {
+                affectionHud.classList.remove("visible", "shaking");
+            }, 1350);
+
+            // hide element once fade out completes
+            const hideTimer = setTimeout(() => {
+                affectionHud.hidden = true;
+            }, 1750);
+
+            affectionTimers.push(actTimer, fadeOutTimer, hideTimer);
+        }
+        // AFFECTION ENDSS
+
+
+        // Remember previous screen for #options Back button
+        document.querySelectorAll('a[href="#options"]').forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const currentScreen = window.location.hash || "#main";
+
+                if (currentScreen !== "#options" && optionsBackBtn) {
+                    optionsBackBtn.href = currentScreen;
+                }
+
+                if (accToggle) {
+                    accToggle.checked = false;
+                }
+            });
+        });
+
+        // lowk idk but works
+        document.querySelectorAll('a[href="#"]').forEach((link) => {
+            link.addEventListener("click", (event) => event.preventDefault());
+        });
+
+        // default stuff
+        let activeSceneKey = "story";
+        let currentLine = 0;
+        let hasActiveChoices = false;
+
+        
 
         function loadScene(sceneKey) {
             activeSceneKey = dialogues[sceneKey] ? sceneKey : "story";
             currentLine = 0;
             //vnSkipBtn.href = dialogues[activeSceneKey].nextScreen;
+            //its for skip button tpi kan gajadi
             showLine(0);
         }
 
@@ -678,14 +764,35 @@
             if (vnNextIndicator) vnNextIndicator.style.display = "none";
 
             choices.forEach((choice) => {
+                const minReq = choice.minAffection ?? -Infinity;
+                const maxReq = choice.maxAffection ?? Infinity;
+                const isLocked = simState.affection < minReq || simState.affection > maxReq;
                 const btn = document.createElement("button");
+
+                // option 1: Completely hide the choice if hideWhenLocked is true
+                if (isLocked && choice.hideWhenLocked) return;
+
+                // option 2: Show locked button with requirement text
+                if (isLocked) {
+                    btn.classList.add("locked");
+                    btn.disabled = true;
+                    btn.setAttribute("data-no-sfx", "");
+                    btn.textContent = `[Requires ${choice.minAffection}% Affection] ${choice.label}`;
+                    vnChoices.appendChild(btn);
+                    return;
+                
                 btn.type = "button";
                 btn.className = "vn-choice-btn";
+
                 btn.textContent = choice.label;
 
                 btn.addEventListener("click", (event) => {
                     event.stopPropagation();
 
+                    if (typeof choice.affection === "number") {
+                        changeAffection(choice.affection);
+
+                    
                     if (typeof choice.action === "function") {
                         choice.action();
                     }
@@ -727,10 +834,11 @@
                 stageEl.style.setProperty("--scene-bg", `url('${line.bg}')`);
             }
 
-            updatePaper(line.paper);
+            updatePaper(line.paper); //why this here? 
             renderChoices(line.choices);
 
             // Hook up sign language challenge if this dialogue line defines one
+            // Literal majig
             if (window.SignManager) {
                 if (line.signChallenge) {
                     window.SignManager.setChallenge({
@@ -759,6 +867,7 @@
             }
         }
 
+        //Dialogue
         function advanceDialogue() {
             if (hasActiveChoices) return;
 
@@ -835,12 +944,15 @@ window.addEventListener("hashchange", function() {
 </script>
 
 <!-- CAMERA -->
+<!-- anything here, plis dont touch plis plis -->
+
 <script type="module">
     import {
         FilesetResolver,
         GestureRecognizer
     } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 
+    // Camera constants
     const SignManager = (() => {
         const hud          = document.getElementById("sign-cam-hud");
         const video        = document.getElementById("sign-video");
@@ -851,15 +963,24 @@ window.addEventListener("hashchange", function() {
         const camCheckbox  = document.getElementById("opt-cam");
         const closeBtn     = document.getElementById("sign-cam-close");
 
-        // Paste recorded stationary sign vectors here (from SignManager.recordStatic("LABEL"))
+        // Paste recorded stationary sign 
         const STATIC_SIGNS = {
-            // "A": [0.012, -0.045, ...],
             "twin": [0,0,0,0.018664025263132406,-0.07729028736517235,0.005382286087227686,0.06660654680610117,-0.12803245570482566,-0.0006339779865429712,0.120899725909332,-0.12867164345103624,-0.010345289640960806,0.15952078555170793,-0.10949927291060908,-0.01877607212592128,0.060936665527162315,-0.17969426351310064,-0.008933778892400565,0.11461090937254113,-0.2510532415877199,-0.019809585762401632,0.14291557709328273,-0.2945592505732958,-0.02470920363774493,0.16386505042632896,-0.3321621898108285,-0.02744609899849205,0.08266124057545346,-0.15730006054718287,-0.02227853360876656,0.154208534396763,-0.21031609293555423,-0.032288295260572024,0.1966628885207651,-0.24371717144716734,-0.038642482763647824,0.22827678826375286,-0.2734163899934408,-0.042757396306368746,0.1004764374696361,-0.12278115191694336,-0.03422134668183442,0.16144062761418154,-0.11930170069027994,-0.04172388266988839,0.1441542295583442,-0.09420720317889744,-0.03487207376642035,0.1219591332402499,-0.0835838626223387,-0.027426957995291563,0.11481175865036126,-0.0831445411318988,-0.04670005757634295,0.15245263360243666,-0.07932858358459839,-0.04398229763344376,0.13529380499891888,-0.06292989912218755,-0.030814583233300885,0.11690932663108393,-0.05550772518667184,-0.02030720297377946,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "a": [0,0,0,0.0626954668832542,-0.02665397739420599,-0.03729420125798069,0.121113164070041,-0.11814018834786368,-0.04555929237392315,0.14145343654820539,-0.20850934651434694,-0.04918290263475738,0.12367589352579013,-0.2714642975566599,-0.04303498106136467,0.09329671445927394,-0.22137633615604965,-0.011908562237858035,0.10111464490605074,-0.28391714414215796,-0.044622854175963934,0.09421910561939777,-0.20103232858063064,-0.05740728361601202,0.08845551100118129,-0.1849525408683483,-0.060827318949528836,0.04802622005454935,-0.22272781076139672,-0.004411961318589662,0.054446108449687364,-0.269383460323769,-0.03546203903906314,0.054100312822467085,-0.17309342922306947,-0.03723312595016633,0.04955043078098473,-0.18179738618180688,-0.030942700714957527,0.00582484374549182,-0.21736231930121777,-0.004523926821209456,0.011253185088912392,-0.26510397668657,-0.03818992527893903,0.015339834224557578,-0.1778146891684566,-0.022433322515853307,0.012707302107127439,-0.18076651550877645,-0.003841955008595917,-0.03700925157080207,-0.21024741177017608,-0.007984679363461932,-0.02929270233522284,-0.24489153831617724,-0.024774420031907857,-0.02142325665098584,-0.18630593961470537,-0.008493613144731542,-0.024123812812356676,-0.17522570084715966,0.009028991299645317,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "b": [0,0,0,0.03812522386224701,-0.03499836655866405,-0.018028487715815125,0.06040877613331011,-0.09652915172140007,-0.022294237860914702,0.06511751843048817,-0.15117238748312897,-0.025314515419729743,0.0670319662205493,-0.19578783732672894,-0.02757193811407882,0.03720374324073694,-0.16563774329981493,-0.0045345457865863656,0.04291862854433767,-0.22414745555960858,-0.015451910492205623,0.04206985472387213,-0.2604005047169173,-0.02595281903068807,0.03946390061146896,-0.2934267229033526,-0.03381487925844262,0.01291043262583585,-0.1701113106914765,-0.004207608960308548,0.018160299466252448,-0.23670115273824152,-0.013272328926572242,0.019850787066163014,-0.2784759384225899,-0.02230980699458493,0.020605717543022622,-0.3147379942165914,-0.02889525455286032,-0.010333154482515981,-0.1612130732292954,-0.0072239928738154,-0.008264388141506582,-0.22557711386626147,-0.01767041216823331,-0.005921645723034664,-0.26418807145608614,-0.024536091421593558,-0.003792302486849299,-0.2988214949066901,-0.029097644211302395,-0.03310610124316735,-0.140493596054109,-0.012346007237839777,-0.03242271542068224,-0.1872853108056973,-0.02299481800655393,-0.029421980084465636,-0.217722309791778,-0.027385117589306972,-0.025957025260900553,-0.24769352039250575,-0.02986049725991418,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "c": [0,0,0,0.057704935146570886,-0.006995148659994262,0.005340050289583275,0.10098839102443397,-0.04390095455479991,0.008025202499271416,0.13508127317186955,-0.07293472774533659,0.003491326270670119,0.15579956052503355,-0.1134005657327256,-0.0007251358878690771,0.07693611494564916,-0.1557181299718309,0.041829822186411666,0.0968670541287921,-0.2166237009362291,0.03565311473436205,0.12390205816690805,-0.22695421184924758,0.022836438092477145,0.1411911154986758,-0.21350810306775186,0.015064080460629322,0.06418866370755386,-0.16557075900441384,0.027623390518585228,0.08609346742536322,-0.24157714683502599,0.019164727656400468,0.11863118449055904,-0.24535540375396783,0.0016629773421571927,0.13852297059585067,-0.2181255097616438,-0.008767727489485618,0.05042877183606185,-0.1711800336080666,0.009642299894397039,0.07576396779076267,-0.246160743623603,0.0006941133632127543,0.1117954555716077,-0.24747193401409703,-0.012327914292573195,0.13432465579078645,-0.22164918111230583,-0.01931960649349732,0.03772876012136153,-0.16701933232266522,-0.00922240185092972,0.06570038909894704,-0.22605501930494812,-0.018101421643321246,0.09620314230058588,-0.24059777651526543,-0.02494727655344587,0.11951757757070357,-0.2319207812840546,-0.028481726698140548,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "d": [0,0,0,0.05870598913576913,-0.05002519688622103,-0.00006712602633746707,0.09214633658114227,-0.10880558838925425,-0.013638792679216187,0.10977985244335141,-0.15089941330309012,-0.033283139508845254,0.09905018620562173,-0.18828859340414,-0.05257877362336817,0.03020528208944266,-0.22855053648949344,-0.009274997905685462,0.04669976052177657,-0.29664369801918655,-0.0299897095432495,0.05029697342871243,-0.35118076592714903,-0.043977103005387055,0.04896067240976813,-0.3935990063947987,-0.055291009740370094,0.0023806103456708696,-0.2193636135109111,-0.026715651507923495,0.08414102670335764,-0.24135743100637758,-0.05432235240449572,0.11128165670671815,-0.1925230258720882,-0.05997930438966026,0.11107530293544172,-0.1675594392143098,-0.060328021251747355,-0.010516920586506969,-0.19216485942277947,-0.045023253591648334,0.07201246768111966,-0.2018967067547068,-0.07059576910650725,0.07867466443261237,-0.145456672235745,-0.059940560529120765,0.06150501326975806,-0.12203421427920359,-0.04967280161574505,-0.0105770352221264,-0.15479408085846078,-0.06455136192802403,0.057072786399181244,-0.157896686114051,-0.07981737743362169,0.06143883851266705,-0.11839827409965198,-0.06978209827140668,0.04224324893085019,-0.09950626563943642,-0.06040551450213425,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "e": [0,0,0,0.05162332748408899,-0.03956385663242307,-0.032357226053531134,0.08270927287062689,-0.13459618656762184,-0.04379674767190728,0.022020186107442608,-0.18204440076369802,-0.052679201435621076,-0.03941371866414716,-0.16540248129255128,-0.054063481443024815,0.07560882347388868,-0.2163867945510685,-0.006969176168900994,0.07605338401062593,-0.266996824619701,-0.029646348026873683,0.0681420307871992,-0.19380173072557197,-0.04079747816938325,0.06676165148644879,-0.17324791488164706,-0.04698827815834235,0.03449541227748268,-0.22838416799930164,-0.004926404945928922,0.0374914688902662,-0.28583589905126067,-0.03012700048665131,0.03405290134282126,-0.2065712132801213,-0.03435673982458397,0.031221311447960927,-0.1847370608746071,-0.03072300999839766,-0.004424555400107164,-0.23007531129046938,-0.009237855432834818,-0.009715612391320365,-0.30233368164129054,-0.033356984093112774,-0.0025957194721870653,-0.22807201914261685,-0.02514744377308765,-0.0017515973199631319,-0.199882401532722,-0.01301578215100964,-0.045994215404547754,-0.22428173249300495,-0.017130163282918352,-0.044460171342760334,-0.2762703138389148,-0.027300765408025143,-0.034319571191282774,-0.23166061386903627,-0.016860997213009748,-0.03225456940255235,-0.20899954858278175,-0.006195326170281107,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "f": [0,0,0,0.03398513167075978,-0.006084639426302882,-0.034311361951700016,0.06729664078826578,-0.03129263834508472,-0.05939419093560644,0.08604271227444947,-0.04730951265598798,-0.08272213367735112,0.07446581977065071,-0.06676106853502034,-0.10396235279447183,0.048039860946956406,-0.14619740596874722,-0.045990455768070586,0.05983432581298034,-0.19505379945054568,-0.08635294315826092,0.061622017114752695,-0.14931027058686966,-0.11449169233690405,0.05930820784935402,-0.1115680395646151,-0.12816774638860898,0.017655682640636376,-0.15901579690787462,-0.04623251650756617,0.026789109574484334,-0.22864195698671924,-0.07467384713294418,0.03641210966647765,-0.2732533390863995,-0.09639817005748667,0.042683714296836914,-0.32654962601745546,-0.11158705182080395,-0.015819641925036213,-0.1511504287781357,-0.051527444423455776,-0.02344336901505236,-0.22615530210120002,-0.07800207516711909,-0.029125697492815777,-0.27901805242061944,-0.10015000328130576,-0.032525566069263316,-0.3312572967575511,-0.11424964485108549,-0.04615863402844773,-0.12438561761155095,-0.05903111087109393,-0.06990245506612452,-0.18226739405199882,-0.07757848764904428,-0.08627095826458106,-0.22116573448633056,-0.08907604364210477,-0.09876145323383455,-0.25978228407530474,-0.09736639534389963,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "g": [0,0,0,0.029467361225965,-0.09022823162602782,-0.004102107284647037,0.09170392873542525,-0.15594933498542182,-0.023780143906136374,0.16254352540170933,-0.17004286565308674,-0.043779053417056436,0.2134553676178829,-0.16003650392151883,-0.06272329710219823,0.0673293791916674,-0.22278793656847856,-0.050624457574896926,0.16688421117706184,-0.22546579507060358,-0.080234786950396,0.22685127747965325,-0.21772868430993686,-0.0991790306355378,0.2752372749100675,-0.20867750107099708,-0.1118350576168722,0.06989632755211769,-0.17010386762120766,-0.06562861083094489,0.1868692233237769,-0.1310486133456249,-0.09647271010908898,0.17243564978003226,-0.09549586556965475,-0.09782587500631279,0.14099125758542264,-0.09000654109466161,-0.09718909861255949,0.07630824423594787,-0.10213846274369,-0.07900103094974921,0.1858557676546759,-0.07209854308767724,-0.102999716802054,0.16770472564708336,-0.04291747034473493,-0.08739857930511313,0.1378154851156087,-0.04172026733136691,-0.07438436270604287,0.08459759797328632,-0.032735350283868134,-0.0928112203580108,0.17828182928093364,-0.019739095066477967,-0.1010097847790757,0.16902565644447054,-0.0009787377455852157,-0.08381668312775457,0.1452619885058106,0.0023636362707102824,-0.07024527907465122,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "h": [0,0,0,0.041369046778581116,-0.07948819169390386,-0.005033243518094547,0.11293280448214284,-0.09922672695150292,-0.022322351448379345,0.1704495339182398,-0.06081646603861164,-0.039603519308346206,0.20792195102372704,-0.026380790384975924,-0.055868151491663465,0.12643747629622382,-0.14574209538972285,-0.05095487634531977,0.2213471817682315,-0.13044161621681125,-0.07217512964023914,0.27490823679480625,-0.12568775927537468,-0.08365355040748214,0.31669604780665594,-0.12429031981666445,-0.09055754771255485,0.1212949910589694,-0.08638352152618213,-0.062348585806175305,0.2244872353622738,-0.07893083831665373,-0.08183225732015162,0.2851075917556316,-0.07981293128563625,-0.08937158942313032,0.3325904103315758,-0.0839623644014427,-0.09682621021972156,0.11498209989778156,-0.02323668077534876,-0.07018440748151014,0.20535570737972197,0.0022882128177342787,-0.08424653601081795,0.18075545616752148,0.000294151550633637,-0.06933729441763548,0.1478987072941489,-0.011390170135154068,-0.0575623776194128,0.10688272763015891,0.03342880207780616,-0.07890970433253693,0.1764305810017982,0.04139424832764515,-0.08348413425333075,0.15959439615737195,0.038336839280456635,-0.06569468886710378,0.13381384440997038,0.029866690352488477,-0.05159021114322577,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "i": [0,0,0,-0.00015849681028384777,-0.05856462831757757,0.03476299771310432,-0.013323825468568019,-0.1261870249120109,0.050624142914054815,-0.005328008587692377,-0.1797608060993481,0.058951239757148104,0.0039141161059132075,-0.21425262620313917,0.06800530838377578,-0.0625588845392005,-0.200638330760254,0.028765504214652286,-0.0002929174352372906,-0.2500652404109188,0.023808897821586922,0.022390757494450228,-0.21391354851659466,0.01686138631911937,0.022926049451039706,-0.17508285451557665,0.013176975804097844,-0.05957002249648129,-0.2028677210151276,0.008649940897891345,0.015081197272034856,-0.24668876885968885,0.006675559707055905,0.03186169132523839,-0.20175448677521673,0.004717699173877554,0.02904286141248852,-0.1672803111571288,0.0031563685157975628,-0.04189222096872969,-0.19566793605537705,-0.009482979268750788,0.027479863540235232,-0.2459012176752404,-0.01163084144618645,0.03711413218545164,-0.19908819628725524,-0.005368995488192401,0.02894141510597813,-0.16196734781369726,-0.0007975582574296722,-0.016901178540899908,-0.1836630074342704,-0.024848460865931423,-0.0031778477653954577,-0.2717955249631137,-0.03299381476314112,0.0017589275538191578,-0.3246088667617764,-0.03249815649540524,0.004878244955349918,-0.3758470682464116,-0.03054855703217127,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            "s": [0,0,0,0.046053545059261555,-0.05029663579089607,-0.019585941573097343,0.0829970754747088,-0.15371247801214935,-0.027672369786493685,0.054888571156195984,-0.2298077099092159,-0.034979968939937,0.0016754263229036808,-0.24162711399817413,-0.037345321687666466,0.05242078810204408,-0.24113296530145512,-0.0016162268473276123,0.07517546623596726,-0.2865748281965435,-0.018970565776106535,0.06958657311646944,-0.22034776808664122,-0.03121078993957269,0.058860848872031225,-0.20002163627036648,-0.04096065501278644,0.009788858789389773,-0.24100840633726223,-0.006533228653530043,0.031474247482565304,-0.2908581940242624,-0.025576247660840483,0.035285424814063125,-0.21727292025453757,-0.031383861836631305,0.025050137683161208,-0.19688945773374342,-0.03182616435576618,-0.027952993401706573,-0.2231805234870979,-0.015086000448112986,-0.008369001479927595,-0.2711343991359328,-0.03697994062535645,0.005878286143967918,-0.2040718130475256,-0.027999292881985903,-0.00479370851534843,-0.18456306905622571,-0.018403263818435295,-0.06465098491540859,-0.19304067852976312,-0.02546086271400857,-0.03540017459413013,-0.23393459273881873,-0.03938375686309297,-0.02268528478405978,-0.1830298759031471,-0.026345467752278317,-0.03395075717574811,-0.16013113090056452,-0.014403317686001775,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         };
 
-        // Paste recorded moving sign sequences here (from SignManager.recordMotion("LABEL"))
+        // Paste recorded moving sign 
         const DYNAMIC_SIGNS = {
-            // "TERIMA_KASIH": [0.018, -0.032, ...],
+        
         };
 
         const MOTION_FRAMES = 16;
@@ -1161,7 +1282,6 @@ window.addEventListener("hashchange", function() {
 
     window.SignManager = SignManager;
 </script>
-    
 
 </body>
 </html>
