@@ -667,12 +667,12 @@
                         choices: [
                             {
                                 label: "uh... can... you... under...stand...me",
-                                action: () => { simState.affection -= 10; },
+                                minaffection: 10,
                                 nextScene: "Timeline_3_2"
                             },
                             {
                                 label: "sorry, i didn't know",
-                                action: () => { simState.affection += 10; },
+                                affection: 10,
                                 nextScene: "Timeline_3_1"
                             }
                         ]
