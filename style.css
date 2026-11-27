@@ -219,31 +219,75 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     box-shadow: 2px 1px 5px var(--pink-accent); /*slight glow*/
 }
 
-/* paper pop up */
+
+/* kartuomb */
+
 .paper-card {
+    --paper: #f4f0e4;
+    --ink: #686658;
+    --border: #8e8978;
+    --frame: #c9ad8d;
+
     position: fixed;
-    top: 38%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 24;
 
-    width: min(85vw, 42vh);
-    aspect-ratio: 1 / 1.414;
-    max-height: 54vh;
+    width: min(90vw, 600px);
+    aspect-ratio: 1.35 / 1;
+    max-height: 85vh;
 
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 22px 26px;
+    padding: 24px 22px;
+
     overflow: visible;
     cursor: default;
 
-    background-color: var(--panel-bg);
-    color: var(--panel-text);
-    box-shadow: 4px 4px 2px rgba(158, 148, 148, 0.306);
-    font-weight: bold;
+    background-color: var(--paper);
+    color: var(--ink);
+
+    border: 2px solid var(--border);
+    box-shadow:
+        3px 3px 0 rgba(100, 95, 80, 0.15),
+        7px 7px 0 rgba(100, 95, 80, 0.05);
+
+    font-family: "Caveat", cursive;
+    font-weight: normal;
 
     animation: paperPopIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* efekberasgitu */
+.paper-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(100, 90, 70, 0.025) 4px
+        );
+
+    opacity: 0.7;
+}
+
+/*  itu buat anu apa border kayaknya bikin kotak ae */
+.paper-card::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+
+    border: 1px solid rgba(120, 112, 95, 0.35);
+    transform: rotate(-0.15deg);
+
+    pointer-events: none;
 }
 
 .paper-card[hidden] {
@@ -255,31 +299,183 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     pointer-events: none;
 }
 
-.paper-header {
+/* title card from invincibel */
+
+.paper-title {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding-bottom: 8px;
-    border-bottom: 3px solid var(--pink-accent);
-    color: var(--pink-accent);
+    justify-content: center;
+
+    text-align: center;
+
+    border: 2px solid var(--border);
+    padding: 6px 4px;
+
+    margin: 12px 2px 14px;
+
+    transform: rotate(-0.4deg);
 }
+
+.paper-title h3,
+.paper-title h4 {
+    margin: 0;
+    font-weight: normal;
+    line-height: 1.15;
+    letter-spacing: 1px;
+}
+
+.paper-title h3 {
+    font-size: clamp(19px, 4.5vw, 26px);
+    transform: rotate(0.4deg);
+}
+
+.paper-title h4 {
+    font-size: clamp(15px, 3.8vw, 21px);
+    transform: rotate(-0.6deg);
+}
+
+/* lay ot */
+
+.paper-content {
+    display: grid;
+    grid-template-columns: 0.85fr 1.45fr;
+    gap: 14px;
+
+    flex: 1;
+    min-height: 0;
+
+    align-items: start;
+}
+
+/* foto */
+
+.paper-photo {
+    position: relative;
+
+    background: #e5d5bd;
+    border: 6px solid var(--frame);
+    outline: 1px solid #a58d72;
+
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform: rotate(-1.5deg);
+    box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.12);
+}
+
+.paper-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* field gitu */
+
+.paper-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    min-width: 0;
+}
+
+.paper-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    min-width: 0;
+}
+
+.paper-field:nth-child(odd) {
+    transform: rotate(0.3deg);
+}
+
+.paper-field:nth-child(even) {
+    transform: rotate(-0.5deg);
+}
+
+.paper-field label {
+    font-size: clamp(15px, 3.7vw, 22px);
+    letter-spacing: 0.5px;
+
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.paper-field input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    padding: 3px 2px;
+
+    border: none;
+    border-bottom: 1px solid rgba(110, 105, 90, 0.3);
+    border-radius: 0;
+
+    background: transparent;
+    color: var(--ink);
+
+    font-family: inherit;
+    font-size: clamp(13px, 3.3vw, 17px);
+    font-weight: normal;
+}
+
+.paper-field input::placeholder {
+    color: rgba(110, 105, 90, 0.4);
+}
+
+.paper-field input:focus {
+    outline: none;
+    border-bottom: 2px solid var(--ink);
+}
+
+/* bunga yang disamping itu loh ubah nya di html bukan sini */
+
+.paper-decoration {
+    position: absolute;
+    top: -7px;
+    right: 9px;
+
+    font-size: 40px;
+    color: #7b9eaf;
+
+    transform: rotate(18deg);
+
+    pointer-events: none;
+}
+
+/* buat tutup */
 
 #paper-close {
     position: absolute;
     bottom: -54px;
     left: 50%;
     transform: translateX(-50%);
+
     height: 40px;
 
     opacity: 80%;
     background: transparent;
     border: none;
+
     color: rgb(11, 11, 11);
+
     font-family: inherit;
     font-size: 1rem;
     font-weight: bold;
+
     cursor: pointer;
-    transition: transform 0.12s ease, background-color 0.15s ease, color 0.15s ease;
+
+    transition:
+        transform 0.12s ease,
+        color 0.15s ease;
 }
 
 #paper-close:hover {
@@ -287,54 +483,6 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     transform: translateX(-50%) translateY(-2px);
 }
 
-.paper-body {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* paper input boxes */
-.paper-body input { 
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 0px solid var(--panel-text);
-    background-color: var(--panel-bg);
-    color: var(--panel-text);
-    font-size: 15px;
-    font-family: inherit;
-    font-weight: bold;
-}
-
-.paper-space{
-    height: 16px;
-}
-
-.paper-fields {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: 4px 8px;
-    align-items: center;
-}
-
-.paper-field {
-    display: contents;
-}
-
-.paper-field label {
-    white-space: nowrap;
-    margin: 0;
-}
-
-.paper-field input {
-    width: 100%;
-    min-width: 0;
-    padding: 4px 8px;
-}
 
 @keyframes paperPopIn {
     from {

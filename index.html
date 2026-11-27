@@ -261,7 +261,7 @@
             { key: "secret", title: "???", src: "audio/tuff.mp3",image:"images/tuff.png", spin:true },
             { key: "ponker", title: "ponk", src: "audio/ponks.mp3" },
             { key: "ego", title: "egoism is when no", src: "audio/ego.mp3", image:"images/maxwhenno.jpg" },
-            { key: "rus", title: "ruski is when this song", src: "audio/kambing.mp3", image:"images/sikambing.jpg" }
+            { key: "rus", title: "h", src: "audio/kambing.mp3" }
         ];
 
         // Load saved volumes from localStorage (defaults: SFX 100%, Music 50%)
@@ -446,30 +446,55 @@
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
                         text: "...",
-                        paper: { //kertas pop up kyk gini
+                        paper: { //kertas pop up kyk gini MUKA W GANTI NANTI PLIS
                             title: "OMB CARD",
                             html: 
                             `
-                            <div class="paper-row">
-                                <h4>certified student</h4>
-                                <span class="paper-stamp">awdawd</span>
-
-                                <hr class = "paper-divider">
-                                <div class= "paper-space"></div>
-                                
-                            </div>
-
-                            <div class="paper-fields">
-                                <div class="paper-field">
-                                    <label for="player-name-input">Name:</label>
-                                    <input type="text" id="player-name-input" placeholder="your name...">
-                                    </div>
-
-                                <div class="paper-field">
-                                    <label for="player-major-input">major:</label>
-                                    <input type="text" id="player-major-input" placeholder="your major...">
+                            <div class="paper-card" id="paper-card">
+                                <div class="paper-title">
+                                    <h3>KARTU IDENTITAS</h3>
+                                    <h4>PEJUANG KEMBANG SEPATU</h4>
                                 </div>
-                             </div>
+                            
+                                <div class="paper-content">
+                                    <div class="paper-photo">
+                                        <img src="images/orangdongo.jpeg" alt="muka ganteng/cantik njay"> 
+                                    </div>
+                            
+                                    <div class="paper-info">
+                                        <div class="paper-field">
+                                            <label for="player-name-input">NAMA</label>
+                                            <input type="text" id="player-name-input" placeholder="...">
+                                        </div>
+                                    
+                                        <div class="paper-field">
+                                            <label for="player-nim-input">NIM</label>
+                                            <input type="text" id="player-nim-input" placeholder="...">
+                                        </div>
+                                    
+                                        <div class="paper-field">
+                                            <label for="player-domicile-input">DOMISILI</label>
+                                            <input type="text" id="player-domicile-input" placeholder="...">
+                                        </div>
+                                    
+                                        <div class="paper-field">
+                                            <label for="player-major-input">JURUSAN</label>
+                                            <input type="text" id="player-major-input" placeholder="...">
+                                        </div>
+                                    
+                                        <div class="paper-field">
+                                            <label for="player-hobby-input">HOBI</label>
+                                            <input type="text" id="player-hobby-input" placeholder="...">
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="paper-decoration">
+                                    <span>✿</span>
+                                </div>
+                            
+                                <button id="paper-close">close</button>
+                            </div>
                             `
                         }
                     },
