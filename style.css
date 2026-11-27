@@ -459,27 +459,29 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     left: 50%;
     transform: translateX(-50%);
 
-    height: 40px;
+    padding: 6px 14px;
 
     opacity: 80%;
     background: transparent;
     border: none;
 
-    color: rgb(11, 11, 11);
+    color: rgb(32, 32, 32);
 
     font-family: inherit;
-    font-size: 1rem;
+    font-size: 1.8rem; /* Increase or decrease this to resize the text */
     font-weight: bold;
 
     cursor: pointer;
 
     transition:
         transform 0.12s ease,
-        color 0.15s ease;
+        color 0.15s ease,
+        opacity 0.15s ease;
 }
 
 #paper-close:hover {
     color: var(--pink-accent);
+    opacity: 100%;
     transform: translateX(-50%) translateY(-2px);
 }
 
