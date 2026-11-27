@@ -435,7 +435,7 @@
                 nextScreen: "#select-topic",
                 lines: [
                     {
-                        name: "me",
+                        name: "{name}",
                         sprite: "images/girl-peace-sign.png",
                         size: "0vh",
                         bg: "images/dokidoki.webp",
@@ -497,113 +497,374 @@
                         //     prompt: "Perform sign: TERIMA KASIH",
                         //     nextScene: "Timeline_1"
                         // },
-                        choices: [
-                            {
-                                label: "nuke umn",
-                                action: () => { simState.affection += 10; },
+                       // choices: [
+                          //  {
+                               // label: "nuke umn",
+                               // action: () => { simState.affection += 10; },
                                
-                            },
-                            {
-                                label: "i just wanna get home man",
+                           // },
+                           // {
+                            //    label: "i just wanna get home man",
                                 
-                            },
-                            {
-                                label: "stever win",
+                            //},
+                            //{
+                               // label: "stever win",
                                
-                            }
-                        ]
+                            //}
+                       // ]
                     },
                     {
-                        name : "me",
+                        name : "{name}",
                         size: "0vh",
-                        bg: "Omb_background.jpg",
+                        bg: "images/omb_bg.jpg",
                         text: "It was around late august"
                     },
                     {
-                        name : "me",
+                        name : "{name}",
                         size: "0vh",
                         text: "I recently enrolled in UNM, one of the most prestigious universities for design and media."
                     },
                     {
-                        name : "me",
+                        name : "{name}",
                         size: "0vh",
                         text: "Truth be told, I was a didn't plan on going to university at all"
                     },
                     {
-                        name : "me",
+                        name : "{name}",
                         size: "0vh",
                         text: "About a year ago I graduated high school and became a shut in"
                     },
                     {
-                        name : "me",
+                        name : "{name}",
                         size: "0vh",
                         text: "I would stay in my room all day and all night"
                     },
                     {
-                        name : "me",
+                        name : "{name}",
                         size: "0vh",
                         text: "My parents were just worried i would end up jobless"
                     },
                     {
-                        name : "me",
-                        size: "0vh",
+                        name : "{name}",
                         sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
                         text: "(girl approaches)"
                     },
                      {
-                        name : "gril ???",
+                        name : "girl ???",
                         size: "0vh",
                         text: "(starts writing on a yellow sticky note)"
                     },
                      {
-                        name : "me",
-                        size: "0vh",
+                        name : "girl ??? in writing",
+                        size: "120vh",
                         sprite: "images/girl-peace-sign.png",
-                        text: ""
+                        text: "Hi whats ur name?"
                     },
                      {
-                        name : "me",
-                        size: "0vh",
+                        name : "{name}",
+                        size: "120vh",
                         sprite: "images/girl-peace-sign.png",
-                        text: "but in this day and age who isn't..?"
-                    },
-                     {
-                        name : "me",
-                        size: "0vh",
-                        text: "but in this day and age who isn't..?"
-                    },
-                 
-
-                    
-                    
+                        text: "Hi whats ur name?",
+                        choices: [
+                            {
+                                label: "say your name",
+                                nextScene: "Timeline_1"
+                            },
+                            {
+                                label: "show card",
+                                action: () => { }, //add view omb card
+                                nextScene: "Timeline_2"
+                            }
+                        ]
+                    },                    
                 ]
             },
 
             // Timeline 1 (Moved outside story.lines to be a top-level scene)
             Timeline_1: {
-                nextScreen: "#select-topic",
                 lines: [
                     {
-                        name: "Narrator",
-                        size: "0vh",
-                        bg: "images/nuke.jpg",
-                        text: "..."
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "my names {name}"
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she waves her hand)"
+                    },
+                    {
+                        name : "girl ???",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she points at herself, and then points at her card)", //add omb card for her
+                        //paper:()
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "Celine... the third?"
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she laughs, then nods)"
+                    },
+                    {
+                     name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she points at your card)",
+                        nextScene: "Timeline_2"
                     }
                 ]
             },
 
             // Timeline 2
             Timeline_2: {
-                nextScreen: "#main",
                 lines: [
-                    {
-                        name: "Kein",
-                        text: "brah"
+                     {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "oh uh, i didn't put much effort on it",
                     },
                     {
-                        name: "Kein",
-                        text: "ok"
-                    }
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(She holds her hands out and makes a calming downward motion, asking you to slow down.)",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "uh... are you deaf?",
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she gets annoyed)",
+                        //add affection meter and go down by 15 or smth
+                    },
+                    {
+                     name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(then she points to her ear)",
+                    },
+                    {
+                     name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(then she points to her ear)",
+                        choices: [
+                            {
+                                label: "uh... can... you... under...stand...me",
+                                action: () => { simState.affection -= 10; },
+                                nextScene: "Timeline_3_2"
+                            },
+                            {
+                                label: "sorry, i didn't know",
+                                action: () => { simState.affection += 10; },
+                                nextScene: "Timeline_3_1"
+                            }
+                        ]
+                    },
+                    
+                    
+                ]
+            },
+            timeline_3_1: {
+                lines: [
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "uh... can... you... under...stand...me",
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she nods still annoyed)",
+                        nextscene: "Timeline_3"
+                    },
+                    
+                ]
+                },
+            timeline_3_2: {
+                lines: [
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "sorry i wasn't sure if you were",
+                    },
+                     {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "...",
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "...",
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "...",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "uh oh, silence",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "quick, think of something to say",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "uh... uh... uh... uh... uh...",
+                        nextscene: "Timeline_3"
+                    },
+                    
+                ]  
+            },
+             Timeline_3: {
+                lines: [
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she points at the number on your card)",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "oh were in the same group",
+                    },
+                     {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "you can sit there while were waiting",
+                    },
+                     {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(I point at farthest spot from me)",
+                    },
+                     {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she sits right next to me)",
+                    },
+                       {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(I point at farthest spot from me)",
+                    },
+                       {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(there was about a minute of silence, but then again that's normal for her right?)",
+                    },
+                     {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she's looking around everywhere)",
+                    },
+
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(is she lonely?)",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(if only a girl could talk to her)",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(ughh i feel so awkward)",
+                    },
+                       {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(and my stomach hurts, i think im gonna throw up)",
+                    },
+                     {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she taps my shoulder)",
+                    },
+                     {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(then points at the stage and then points at her ear)",
+                    },
+                     {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(on the stage are two mc's and they appear to be saying some welcoming remarks)",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "oh... uh.. they're just saying some welcoming remarks",
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she taps my shoulder)",
+                    },
+                    {
+                        name : "Celine III",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(she nods)",
+                    },
+                    {
+                        name : "{name}",
+                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "(thats right my uncle was an asl teacher )",
+                    },
+                    
                 ]
             }
         };
