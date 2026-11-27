@@ -1,7 +1,7 @@
 Animations
-- [ ] Browser open animation
+- [x] Browser open animation
 - [ ] Click on start adventure
-- [ ] Learn more
+- [oke ig] Learn more
 
 Sound
 - [7] Music
@@ -17,13 +17,13 @@ Learn more page (Stever win otw bikin)
 - [o?] mrbeast animation
 
 Assets
-- [ ] Main menu and button assets
+- [1/2] Main menu and button assets
 - [ ] Background Assets
 - [ ] Character Assets
 
 Accessibility Menu
 - [o] Dark mode
-- [ ] mute music button
+- [i mean bisa kecilin bgm ke 0%] mute music button
 - [ ]
  
 Gameplay
