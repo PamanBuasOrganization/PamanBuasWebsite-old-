@@ -672,7 +672,7 @@
                         choices: [
                             {
                                 label: "uh... can... you... under...stand...me",
-                                action: () => { simState.affection -= 10; },
+                                minaffection: 10,
                                 nextScene: "Timeline_3_2"
                             },
                             {
@@ -868,7 +868,7 @@
                         name: "{name}",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(thats right my uncle was an asl teacher )"
+                        text: "(thats right my uncle was an asl teacher)"
                     }
                 ]
             }
