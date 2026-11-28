@@ -92,7 +92,7 @@ body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .t
 }
 
 .game-title {
-    font-family: 'Caveat', cursive;
+
     font-size: clamp(3.2rem, 6.5vw, 5.5rem);
     margin: 0;
     line-height: 0.95;
@@ -124,7 +124,7 @@ body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .t
 
 /* Bottom-left offset disc container */
 
-/* MAIN DISC TRANSITION (Bottom-Left -> Bottom-Center) */
+/* DISC START */
 .main-menu-disc {
     position: fixed;
     left: -95px;
@@ -134,9 +134,9 @@ body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .t
     z-index: 30; /* Stays above #main and #options */
     pointer-events: none;
     transition:
-        left 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-        bottom 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    left 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* When Options is active: spin 360deg and glide to bottom-center */
@@ -146,7 +146,7 @@ body.in-options .main-menu-disc {
     transform: translateX(-50%) rotate(360deg);
 }
 
-/* Hide the 3 main menu slices smoothly when docked in Options */
+/* Hide the 3 main menu slices when docked in Options */
 body.in-options #disc-slices {
     opacity: 0.35;
     pointer-events: none;
@@ -161,8 +161,7 @@ body.in-options #disc-slices {
     padding: 14px 28px 14px 36px;
     background: linear-gradient(135deg, #e04f5f, #b83242);
     color: #fff;
-    font-family: 'Caveat', cursive;
-    font-size: 1.65rem;
+    font-size: 1.3rem;
     font-weight: 700;
     text-decoration: none;
     border-radius: 0 999px 999px 0;
@@ -172,9 +171,9 @@ body.in-options #disc-slices {
     opacity: 0;
     transform: translateX(140px);
     transition:
-        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
-        opacity 0.45s ease 0.15s,
-        filter 0.2s ease;
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+    opacity 0.45s ease 0.15s,
+    filter 0.2s ease;
 }
 
 body.in-options .disc-back-btn {
@@ -188,7 +187,7 @@ body.in-options .disc-back-btn {
     transform: translateX(6px);
 }
 
-/* OPTIONS SCREEN & CENTER ROTARY DISCS */
+/* OPTIONS SCREEN & CENTER DISCS */
 #options {
     display: none;
     position: fixed;
@@ -231,7 +230,6 @@ body.in-options #main {
 }
 
 .rotary-label {
-    font-family: 'Caveat', cursive;
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -340,7 +338,6 @@ body.in-options #main {
 }
 
 
-/* TRACK SELECTOR TONEARM NEEDLE */
 
 .track-turntable-wrap {
     position: relative;
@@ -430,7 +427,7 @@ body.in-options #main {
 /* Tactile Vinyl / CD Details */
 .disc-groove {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.08);
+    stroke: rgba(154, 146, 146, 0.08);
     stroke-width: 1;
 }
 
@@ -446,11 +443,12 @@ body.in-options #main {
     stroke-width: 2;
 }
 
+/* the text inside the disc */
 .disc-label {
     fill: #ffffff;
-    font-family: 'Caveat', cursive;
-    font-weight: 700;
-    font-size: 23px;
+    
+    font-weight: 200;
+    font-size: 18px;
     letter-spacing: 0.5px;
     text-anchor: middle;
     dominant-baseline: middle;
@@ -476,6 +474,8 @@ body.in-options #main {
     clip: rect(0 0 0 0);
     white-space: nowrap;
 }
+
+/* OPTION DISC ENDS */
 
 /* footer */
 .main-menu-footer {
@@ -580,7 +580,7 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     display: none;
 }
 
-/* skip button */
+/* skip button 
 .vn-skip {
     position: absolute;
     top: 20px;
@@ -602,9 +602,9 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     background-color: var(--pink-accent);
     color: var(--white-pure);
     transform: translateY(-4px);
-    box-shadow: 2px 1px 5px var(--pink-accent); /*slight glow*/
+    box-shadow: 2px 1px 5px var(--pink-accent);
 }
-
+*/
 
 /* kartuomb */
 
@@ -1647,7 +1647,7 @@ body:has(#opt-3:checked) {
     }
 }
 
-
+/*
 #secretSongVisual img {
     width: 100%;
     height: 100%;
@@ -1684,4 +1684,4 @@ body:has(#opt-3:checked) {
 
 #musicVisualImage.spinning {
     animation: secretSpin 2s linear infinite;
-}
+}*/
