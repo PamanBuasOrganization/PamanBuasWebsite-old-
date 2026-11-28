@@ -261,7 +261,13 @@
             blip:  "audio/blip.mp3",
             start: "audio/click.mp3",
             crystal: "audio/crystal_sfx.mp3",
-            affection: "audio/crystal_sfx.mp3" 
+            affection: "audio/crystal_sfx.mp3",
+
+            //character sounds
+            mc: "",
+            celine: "", //prolly paper writing sounds
+            pamanBuas: "" //asgore sound?
+
         };
 
         // MUSIC HERE ANJAY
@@ -289,12 +295,18 @@
             updateMusicVisual(bgmTracks[currentTrackIndex]);
         });
 
-        function playSFX(name) {
+        function playSFX(name, options = {}) {
             const src = sfxFiles[name];
             if (!src || sfxVolume <= 0) return;
 
             const sound = new Audio(src);
             sound.volume = sfxVolume;
+
+            //pitch variations for the dialogue
+            if (options.pitchJitter){
+                sound.playbackRate = 1 + (Math.random() * 2 -1)* options.pitchJitter;
+            }
+
             sound.play().catch(() => {});
         }
 
@@ -357,7 +369,7 @@
             }, { once: true });
         });
 
-        // 3. AUTOMATIC GLOBAL HOVER & CLICK SFX FOR ALL MENUS
+        // AUTOMATIC GLOBAL HOVER & CLICK SFX FOR ALL MENUS
         const interactiveSelector = "a, button, .acc-trigger, .acc-item, [data-sfx]";
         let lastHovered = null;
 
@@ -381,7 +393,7 @@
             playSFX(target.dataset.sfx || "click");
         });
 
-        // 4. WIRE UP OPTIONS MENU CONTROLS
+        // WIRE UP OPTIONS MENU CONTROLS
         document.addEventListener("DOMContentLoaded", () => {
             const sfxSlider = document.getElementById("sfx-slider");
             const sfxValue  = document.getElementById("sfx-value");
@@ -436,6 +448,8 @@
             somethingUnlocked: false
         };  
     
+
+        //STORY START
         const dialogues = {
             story: {
                 nextScreen: "#main", // Change to "#select-topic" if you uncomment #select-topic
@@ -515,7 +529,8 @@
                         sprite: "images/pamanbuasfake.png",
                         size: "0vh",
                         bg: "images/umn.jpg",
-                        text: "meanwhile at wemen..."
+                        text: "meanwhile at wemen...",
+                        voice: null //For no sounds
                     },
                     {
                         name: "{name}",
@@ -672,7 +687,7 @@
                         choices: [
                             {
                                 label: "uh... can... you... under...stand...me",
-                                action: () => { simState.affection -= 10; },
+                                affection: -10,
                                 nextScene: "Timeline_3_2"
                             },
                             {
@@ -1007,7 +1022,7 @@
             // Hide element once fade out completes
             const hideTimer = setTimeout(() => {
                 affectionHud.hidden = true;
-            }, 1750);
+            }, 1950);
 
             affectionTimers.push(actTimer, fadeOutTimer, hideTimer);
         }
@@ -1032,9 +1047,91 @@
             link.addEventListener("click", (event) => event.preventDefault());
         });
 
+        // default stuff
         let activeSceneKey = "story";
         let currentLine = 0;
         let hasActiveChoices = false;
+
+        // TYPEWRITER START
+        // typewriter state for the dialogue
+        let typingTimer = null;
+        let isTyping = false;
+        let fullCurrentText = "";
+        let pendingChoices = null;
+
+        // stop typing
+        function stopTyping (){
+            if (typingTimer){
+                clearTimeout(typingTimer);
+                typingTimer = null;
+            }
+            isTyping = false;
+        }
+
+        // finish typing
+        function finishTyping(){
+            stopTyping();
+            vnText.textContent = fullCurrentText;
+            renderChoices(pendingChoices);
+        }
+
+        // the typewriter function, 
+        function typeDialogue(text, 
+        {   speed = 30,     //change speed, bigger number -> slower
+            voice = "mc", //change sound
+            choices = null 
+        } = {}) {
+
+            stopTyping();
+            fullCurrentText = text;
+            pendingChoices = choices;
+            vnText.textContent = "";
+            vnChoices.innerHTML = "";
+            hasActiveChoices = false;
+
+            if (vnNextIndicator) {
+                vnNextIndicator.style.display = "none";
+            }
+
+            // disables when not in story
+            if (window.location.hash !== "#story" || !text) {
+                finishTyping();
+                return;
+            }
+
+            isTyping = true;
+            let charIndex = 0;
+
+            function typeNextChar() {
+                if (!isTyping) return;
+
+                const char = fullCurrentText[charIndex];
+                vnText.textContent += char;
+                charIndex++;
+
+                // Play blip sound for each non-space character
+                if (voice && char.trim() !== "" && window.AudioManager) {
+                    AudioManager.playSFX(voice, { pitchJitter: 0.08 });
+                }
+
+                if (charIndex >= fullCurrentText.length) {
+                    finishTyping();
+                    return;
+                }
+
+                // Indie-game punctuation pauses
+                let delay = speed;
+                if (char === "." || char === "!" || char === "?") {
+                    delay = speed * 5;
+                } else if (char === ",") {
+                    delay = speed * 2.5;
+                }
+
+                typingTimer = setTimeout(typeNextChar, delay);
+            }
+
+            typeNextChar();
+        }
 
         function loadScene(sceneKey) {
             activeSceneKey = dialogues[sceneKey] ? sceneKey : "story";
@@ -1113,10 +1210,9 @@
             const scene = dialogues[activeSceneKey];
             const line = scene.lines[index];
             const displayName = simState.playerName || "Player";
+            const resolvedText = (line.text || "").replaceAll("{name}", displayName);
 
             vnName.textContent = (line.name || "").replaceAll("{name}", displayName);
-            vnText.textContent = (line.text || "").replaceAll("{name}", displayName);
-            AudioManager.playSFX("blip");
 
             if (line.sprite && stageSprite) {
                 stageSprite.src = line.sprite;
@@ -1135,7 +1231,12 @@
             }
 
             updatePaper(line.paper);
-            renderChoices(line.choices);
+
+            typeDialogue(resolvedText, {
+                speed: line.speed ?? 30,
+                voice: line.voice !== undefined ? line.voice : "blip",
+                choices: line.choices
+            });
 
             // Hook up sign language challenge if this dialogue line defines one
             if (window.SignManager) {
@@ -1168,6 +1269,11 @@
 
         // Dialogue progression
         function advanceDialogue() {
+            if (isTyping) {
+                finishTyping();
+                return;
+            }
+
             if (hasActiveChoices) return;
 
             const scene = dialogues[activeSceneKey];
@@ -1194,27 +1300,44 @@
 
         document.querySelectorAll("[data-dialogue]").forEach((trigger) => {
             trigger.addEventListener("click", () => {
-                loadScene(trigger.dataset.dialogue);
+                activeSceneKey = dialogues[trigger.dataset.dialogue] ? trigger.dataset.dialogue : "story";
+                currentLine = 0;
+                if (window.location.hash === "#story") {
+                    showLine(0);
+                }
             });
         });
 
         vnOverlay.addEventListener("click", (event) => {
-            if (event.target.closest(".vn-skip, .paper-card") || hasActiveChoices) return;
+            if (event.target.closest(".vn-skip, .paper-card")) return;
+            if (isTyping) {
+                finishTyping();
+                return;
+            }
+            if (hasActiveChoices) return;
             advanceDialogue();
         });
 
         document.addEventListener("keydown", (event) => {
             if (event.target.matches("input, textarea")) return;
             const isDialogueOpen = window.location.hash === "#story";
-            if (isDialogueOpen && !hasActiveChoices && (event.key === " " || event.key === "Enter")) {
+            if (isDialogueOpen && (event.key === " " || event.key === "Enter")) {
                 event.preventDefault();
-                advanceDialogue();
+                if (isTyping) {
+                    finishTyping();
+                    return;
+                }
+                if (!hasActiveChoices) {
+                    advanceDialogue();
+                }
             }
         });
 
         window.addEventListener("hashchange", () => {
             if (window.location.hash === "#story") {
                 showLine(currentLine);
+            } else {
+                stopTyping();
             }
         });
     });
