@@ -2327,7 +2327,7 @@ document.addEventListener("DOMContentLoaded", () => {
     animate();
 });
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Inject the "Back to Menu" tab that slides in from the right alongside the centered disc
+    // Inject the "Back to Menu" tab that slides in from the right alongside the centered disc
     const backBtn = document.createElement("a");
     backBtn.href = "#main";
     backBtn.className = "disc-back-btn";
@@ -2349,7 +2349,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.hash = "#main";
     });
 
-    // 2. Helper: Attach circular spin-drag behavior to a rotary disc
+    // Helper: Attach circular spin-drag behavior to a rotary disc
     function makeRotaryDisc(discEl, onDeltaAngle) {
         if (!discEl) return;
         let isDragging = false;
@@ -2399,7 +2399,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, { passive: false });
     }
 
-    // 3. Setup SFX & BGM Volume Rotary Discs (0% - 100% over 270° of rotation)
+    // Setup SFX & BGM Volume Rotary Discs (0% - 100% over 270° of rotation)
     function setupVolumeDisc(discId, sliderId, valueDisplayId) {
         const discEl = document.getElementById(discId);
         const sliderEl = document.getElementById(sliderId);
@@ -2420,7 +2420,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderVolume();
 
         makeRotaryDisc(discEl, (deltaDeg) => {
-            // 2.7 degrees of spin = 1% volume change
+            // 2.7 degrees of spin = 1% volume change jir
             const nextVol = Math.max(0, Math.min(100, volume + deltaDeg / 2.7));
             const rounded = Math.round(nextVol);
 
@@ -2440,7 +2440,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupVolumeDisc("sfx-rotary", "sfx-slider", "sfx-value");
     setupVolumeDisc("bgm-rotary", "bgm-slider", "bgm-value");
 
-    // 4. Setup Track Selector Rotary Disc with Tonearm Needle
+    // Setup Track Selector Rotary Disc with Tonearm Needle
     const trackDisc = document.getElementById("track-rotary");
     const trackSwitchBtn = document.getElementById("bgm-switch");
     const trackHubName = document.getElementById("track-hub-name");

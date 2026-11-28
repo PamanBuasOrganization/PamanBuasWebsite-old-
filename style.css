@@ -123,9 +123,8 @@ body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .t
 }
 
 /* Bottom-left offset disc container */
-/* =========================================================
-   1. MAIN DISC TRANSITION (Bottom-Left -> Bottom-Center)
-   ========================================================= */
+
+/* MAIN DISC TRANSITION (Bottom-Left -> Bottom-Center) */
 .main-menu-disc {
     position: fixed;
     left: -95px;
@@ -189,9 +188,7 @@ body.in-options .disc-back-btn {
     transform: translateX(6px);
 }
 
-/* =========================================================
-   2. OPTIONS SCREEN & 3 CENTER ROTARY DISCS
-   ========================================================= */
+/* OPTIONS SCREEN & CENTER ROTARY DISCS */
 #options {
     display: none;
     position: fixed;
@@ -200,7 +197,7 @@ body.in-options .disc-back-btn {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 120px; /* Leaves room for bottom-center docked disc */
+    padding-bottom: 120px; 
 }
 
 body.in-options #options,
@@ -310,7 +307,7 @@ body.in-options #main {
     box-shadow: 0 0 10px rgba(255, 190, 11, 0.85);
 }
 
-/* Stationary Center Hub with Percentage / Track Name */
+/* Stationary Center Hub with Percentage and Track Name */
 .rotary-center-hub {
     position: absolute;
     top: 50%;
@@ -342,9 +339,9 @@ body.in-options #main {
     font-size: 1.15rem;
 }
 
-/* =========================================================
-   3. TRACK SELECTOR TONEARM NEEDLE
-   ========================================================= */
+
+/* TRACK SELECTOR TONEARM NEEDLE */
+
 .track-turntable-wrap {
     position: relative;
 }
@@ -440,7 +437,7 @@ body.in-options #main {
 .disc-hub-band {
     fill: none;
     stroke: rgba(255, 255, 255, 0.14);
-    stroke-width: 24; /* Creates the translucent clamping collar around the hole */
+    stroke-width: 24; 
 }
 
 .disc-inner-rim {
@@ -564,7 +561,6 @@ body:has(.dim-story:target) .story-background::after {
     height: 100vh;
     z-index: 20;
 
-    /* Replace with your scene background image */
     background-color: transparent;
 
     flex-direction: column;
