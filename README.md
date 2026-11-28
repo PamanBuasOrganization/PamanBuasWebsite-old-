@@ -13,24 +13,24 @@
 <table>
 <tr>
 <td width="50%" valign="top">
-<img src="imageTopLeft" alt="image" width="100%">
+<img src="images/black.jpg" alt="image" width="100%">
 <br><b>Topleft feature blabla</b><br>
 yapyapyapyapyapyapyapypaypapyapypaypaypaypapypyay
 </td>
 <td width="50%" valign="top">
-<img src="imageTopRight" alt="image" width="100%">
+<img src="dokidoki.webp" alt="image" width="100%">
 <br><b>Topleft feature blabla</b><br>
 yapyapyapyapyapyapyapypaypapyapypaypaypaypapypyay
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src="imageBottomLeft" alt="image" width="100%">
+<img src="silentvoice.jpg" alt="image" width="100%">
 <br><b>Topleft feature blabla</b><br>
 yapyapyapyapyapyapyapypaypapyapypaypaypaypapypyay
 </td>
 <td width="50%" valign="top">
-<img src="imageBottomRight" alt="image" width="100%">
+<img src="tuff.png" alt="image" width="100%">
 <br><b>Topleft feature blabla</b><br>
 yapyapyapyapyapyapyapypaypapyapypaypaypaypapypyay
 </td>
