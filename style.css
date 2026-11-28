@@ -616,7 +616,7 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
     opacity: 0;
     pointer-events: none;
     z-index: 950;
-    transition: opacity 1.6s ease; /* length of fade to black */
+    transition: opacity 2.6s ease; /* length of fade to black */
 }
 
 #black-fade-overlay.active {
