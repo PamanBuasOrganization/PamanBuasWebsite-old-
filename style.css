@@ -67,14 +67,41 @@ body {
 }
 
 .main-menu:target { display: flex; }    /* Show the screen if its ID matches the #target in the URL */
-#main { display: flex; }               /* make #main default */
-body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .teach-menu:target) #main { display: none; } /* Hide #main when other # */
+/* Make #main default visible screen */
+#main {
+    display: block;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Hide #main when another screen is targeted */
+body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .teach-menu:target) #main {
+    display: none;
+}
+
+.title-group {
+    position: absolute;
+    top: 12%;
+    right: 6%;
+    left: auto;
+    text-align: right;
+    z-index: 5;
+    pointer-events: none;
+}
 
 .game-title {
-    font-size: 4rem;
-    letter-spacing: 0.3rem;
-    margin-bottom: 1.4rem;
-    text-shadow: 2px 2px 1px var(--pink-shadow); 
+    font-family: 'Caveat', cursive;
+    font-size: clamp(3.2rem, 6.5vw, 5.5rem);
+    margin: 0;
+    line-height: 0.95;
+}
+
+.game-title.subtitle {
+    font-size: clamp(1.8rem, 3.8vw, 3rem);
+    opacity: 0.85;
+    margin-top: 0.25rem;
 }
 
 .main-menu-list ul {
@@ -82,55 +109,418 @@ body:has(.main-menu:target:not(#main), .vn-screen:target, .vn-overlay:target, .t
 }
 
 .main-menu-list a,
-.main-menu-list button{
+.main-menu-list button {
     text-decoration: none;
     background: transparent;
     color: var(--pink-menu);
     font-size: 2rem;
     display: block;
-    margin: 1.5rem 0; 
+    margin: 1.5rem 0;
     position: relative;
     transition: color 0.1s;
     border: 2px solid var(--pink-menu);
     width: 320px;
 }
 
-/* main menu list hover state */
-.main-menu-list a:hover,
-.main-menu-list button:hover{color: var(--white);}
-
-.main-menu-list a::before,
-.main-menu-list button::before{
-    content: '- ';
-    opacity: 0;
-    position: absolute;
-    left: -2rem; /*position*/
+/* Bottom-left offset disc container */
+/* =========================================================
+   1. MAIN DISC TRANSITION (Bottom-Left -> Bottom-Center)
+   ========================================================= */
+.main-menu-disc {
+    position: fixed;
+    left: -95px;
+    bottom: -95px;
+    width: min(72vw, 540px);
+    height: min(72vw, 540px);
+    z-index: 30; /* Stays above #main and #options */
+    pointer-events: none;
+    transition:
+        left 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+        bottom 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.main-menu-list a:hover::before,
-.main-menu-list button:hover::before{
+/* When Options is active: spin 360deg and glide to bottom-center */
+body.in-options .main-menu-disc {
+    left: 50%;
+    bottom: -240px;
+    transform: translateX(-50%) rotate(360deg);
+}
+
+/* Hide the 3 main menu slices smoothly when docked in Options */
+body.in-options #disc-slices {
+    opacity: 0.35;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+/* "Back to Menu" button sliding in from the right alongside the centered disc */
+.disc-back-btn {
+    position: fixed;
+    bottom: 36px;
+    left: calc(50% + 145px);
+    padding: 14px 28px 14px 36px;
+    background: linear-gradient(135deg, #e04f5f, #b83242);
+    color: #fff;
+    font-family: 'Caveat', cursive;
+    font-size: 1.65rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0 999px 999px 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+    z-index: 29;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(140px);
+    transition:
+        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.15s,
+        opacity 0.45s ease 0.15s,
+        filter 0.2s ease;
+}
+
+body.in-options .disc-back-btn {
+    pointer-events: auto;
     opacity: 1;
+    transform: translateX(0);
+}
+
+.disc-back-btn:hover {
+    filter: brightness(1.15);
+    transform: translateX(6px);
+}
+
+/* =========================================================
+   2. OPTIONS SCREEN & 3 CENTER ROTARY DISCS
+   ========================================================= */
+#options {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 120px; /* Leaves room for bottom-center docked disc */
+}
+
+body.in-options #options,
+#options:target {
+    display: flex;
+}
+
+body.in-options #main {
+    display: none;
+}
+
+.options-title {
+    margin-bottom: 1.8rem;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.options-turntables {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    flex-wrap: wrap;
+}
+
+.rotary-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.rotary-label {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Rotary Disc Shell */
+.rotary-disc {
+    position: relative;
+    width: clamp(145px, 17vw, 195px);
+    height: clamp(145px, 17vw, 195px);
+    border-radius: 50%;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.65),
+        inset 0 0 0 3px rgba(255, 255, 255, 0.14);
+    transition: box-shadow 0.2s ease;
+}
+
+.rotary-disc:active {
+    cursor: grabbing;
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Spinning Platter */
+.rotary-platter {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            from 35deg,
+            rgba(255, 255, 255, 0.16) 0deg,
+            rgba(255, 255, 255, 0.02) 55deg,
+            rgba(0, 0, 0, 0.25) 140deg,
+            rgba(255, 255, 255, 0.14) 215deg,
+            rgba(0, 0, 0, 0.25) 310deg,
+            rgba(255, 255, 255, 0.16) 360deg
+        ),
+        radial-gradient(circle, #252f54 0%, #11162b 100%);
+    will-change: transform;
+}
+
+/* Concentric Vinyl Grooves */
+.rotary-grooves {
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        circle,
+        transparent 0px,
+        transparent 5px,
+        rgba(255, 255, 255, 0.06) 6px,
+        transparent 7px
+    );
+    pointer-events: none;
+}
+
+/* Indicator notch on the spinning platter so rotation is clearly visible */
+.rotary-tick {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    width: 6px;
+    height: 22px;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    background: #ffbe0b;
+    box-shadow: 0 0 10px rgba(255, 190, 11, 0.85);
+}
+
+/* Stationary Center Hub with Percentage / Track Name */
+.rotary-center-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44%;
+    height: 44%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #2c3863, #151b33);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 3px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+    pointer-events: none;
+}
+
+.rotary-center-hub span {
+    font-family: 'Caveat', cursive;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.05;
+}
+
+.track-hub span {
+    font-size: 1.15rem;
+}
+
+/* =========================================================
+   3. TRACK SELECTOR TONEARM NEEDLE
+   ========================================================= */
+.track-turntable-wrap {
+    position: relative;
+}
+
+.track-marker-dot {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: #3a86ff;
+    box-shadow: 0 0 8px #3a86ff;
+    transform-origin: 4px calc(clamp(145px, 17vw, 195px) / 2 - 8px);
+}
+
+.tonearm {
+    position: absolute;
+    top: -12px;
+    right: -16px;
+    width: 70px;
+    height: 95px;
+    z-index: 15;
+    pointer-events: none;
+}
+
+.tonearm-base {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #d8dee9, #5e6885);
+    border: 2px solid #0b1020;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.tonearm-arm {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 5px;
+    height: 68px;
+    background: linear-gradient(90deg, #e5e9f0, #8892b0);
+    border-radius: 4px;
+    transform-origin: top center;
+    transform: rotate(28deg);
+    box-shadow: -3px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.tonearm-needle {
+    position: absolute;
+    bottom: 14px;
+    left: 16px;
+    width: 12px;
+    height: 18px;
+    background: #ff5e5b;
+    border-radius: 3px;
+    transform: rotate(28deg);
+    box-shadow: 0 0 10px rgba(255, 94, 91, 0.85);
+}
+
+#disc-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.disc-slice-group {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.disc-slice-path {
+    stroke: rgba(11, 16, 32, 0.45);
+    stroke-width: 1;
+    transition: filter 0.2s ease;
+}
+
+.disc-slice-group:hover .disc-slice-path {
+    filter: brightness(1.14);
+}
+
+/* Tactile Vinyl / CD Details */
+.disc-groove {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 1;
+}
+
+.disc-hub-band {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.14);
+    stroke-width: 24; /* Creates the translucent clamping collar around the hole */
+}
+
+.disc-inner-rim {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.45);
+    stroke-width: 2;
+}
+
+.disc-label {
+    fill: #ffffff;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 23px;
+    letter-spacing: 0.5px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+    transition: opacity 0.18s ease, font-size 0.18s ease;
+}
+.disc-slice-group,
+.disc-slice-group:focus,
+.disc-slice-group:active,
+.disc-slice-path {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.sr-only-links {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 
 /* footer */
 .main-menu-footer {
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
+    bottom: 0;
     left: 0;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0 40px;
+    overflow: hidden;
+    padding: 8px 0;
     background-color: var(--cyan-bg);
-    box-shadow: 0px 0px 80px var(--cyan-bg); /* fun glowymajig */ 
-    opacity: 75%;
+    box-shadow: 0px 0px 80px var(--cyan-bg);
+    opacity: 0.85;
+    z-index: 6;
+    pointer-events: none;
+}
+
+.footer-marquee {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+
+.footer-track {
+    display: flex;
+    width: max-content;
+    animation: footer-scroll 16s linear infinite;
 }
 
 .footer-text {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--panel-text);
-    opacity: 80%;
+    white-space: nowrap;
+    padding-right: 3rem;
+}
+
+@keyframes footer-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(50%);
+    }
 }
 /* footer end */
 

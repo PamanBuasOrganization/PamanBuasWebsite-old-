@@ -21,26 +21,76 @@
     </div>
 
     <!-- MAIN MENU -->
-    <main class="screen main-menu" id="main">
-        
-        <!-- title -->
+<main class="screen main-menu" id="main">
+    <div class="title-group">
         <h1 class="game-title">Paman Buas™</h1>
-        <h2 class="game-title">Presents</h2>
-        <nav class="main-menu-list">
+        <h2 class="game-title subtitle">Presents</h2>
+    </div>
 
-            <!-- button click links -->
-            <ul>
-                <li><a href="#story" data-dialogue="story">Start Adventure</a></li>
-                <li><a href="#options">Options</a></li>
-                <li><a href="#LearnMore" id="learnMoreButton">Learn More</a></li>
-            </ul>
-        </nav>
+    <nav class="main-menu-disc" aria-label="Main Menu">
+    <svg id="disc-svg" viewBox="-270 -270 540 540" role="group">
+        <defs>
+            <!-- shadows @cello remove?-->
+            <filter id="disc-ambient-shadow" x="-25%" y="-25%" width="150%" height="150%">
+                <feDropShadow dx="6" dy="-4" stdDeviation="14" flood-color="#000" flood-opacity="0.65"/>
+            </filter>
 
-        <!-- el paman buas footer -->
-        <footer class="main-menu-footer">
-            <div class="footer-text">Learning disguised as an interactive game. </div>
-        </footer>
-    </main>
+            <filter id="wedge-pop-shadow" x="-25%" y="-25%" width="150%" height="150%">
+                <feDropShadow dx="4" dy="-4" stdDeviation="8" flood-color="#000" flood-opacity="0.7"/>
+            </filter>
+
+            <!-- gloss  -->
+            <linearGradient id="disc-sheen" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+                <stop offset="38%" stop-color="#ffffff" stop-opacity="0.03" />
+                <stop offset="65%" stop-color="#000000" stop-opacity="0.08" />
+                <stop offset="100%" stop-color="#000000" stop-opacity="0.32" />
+            </linearGradient>
+
+            <!-- invis center -->
+            <mask id="disc-ring-mask">
+                <rect x="-270" y="-270" width="540" height="540" fill="white" />
+                <circle cx="0" cy="0" r="88" fill="black" />
+            </mask>
+        </defs>
+
+        <!-- Layer 1 (interactables) -->
+        <g id="disc-slices" filter="url(#disc-ambient-shadow)"></g>
+
+        <!-- Layer 2 -->
+        <g class="disc-tactile-overlay" mask="url(#disc-ring-mask)" pointer-events="none">
+        
+            <circle cx="0" cy="0" r="230" fill="url(#disc-sheen)" />
+
+            <!-- Concentric track grooves spanning across all wedges -->
+            <circle cx="0" cy="0" r="122" class="disc-groove" />
+            <circle cx="0" cy="0" r="146" class="disc-groove" />
+            <circle cx="0" cy="0" r="170" class="disc-groove" />
+            <circle cx="0" cy="0" r="194" class="disc-groove" />
+            <circle cx="0" cy="0" r="216" class="disc-groove" />
+
+            <!-- Frosted inner clamping hub around the spindle hole -->
+            <circle cx="0" cy="0" r="102" class="disc-hub-band" />
+            <circle cx="0" cy="0" r="89" class="disc-inner-rim" />
+        </g>
+    </svg>
+
+    <ul class="sr-only-links">
+        <li><a href="#story" data-dialogue="story" data-weight="1.0" data-color="#00bbfa">Start</a></li>
+        <li><a href="#options" data-weight="1.0" data-color="#00bbfa">Options</a></li>
+        <li><a href="#LearnMore" id="learnMoreButton" data-weight="1.0" data-color="#00bbfa">Learn More</a></li>
+    </ul>
+</nav>
+
+    <footer class="main-menu-footer">
+        <div class="footer-marquee">
+            <div class="footer-track">
+                <span class="footer-text">Learning disguised as an interactive game</span>
+                <span class="footer-text" aria-hidden="true">Learning disguised as an interactive game</span>
+            </div>
+        </div>
+    </footer>
+</main>
 
     <!-- Dialogue Overlay -->
     <section class="screen in-adventure vn-overlay" id="story">
@@ -55,8 +105,6 @@
             <button type="button" id="paper-close" title="put away">put away</button>
         </div>
 
-
-
         <div class="vn-choices" id="vn-choices"></div>
 
         <div class="vn-dialogue-box">
@@ -65,21 +113,6 @@
             <span class="vn-next-indicator">▼</span>
         </div>
     </section>
-
-<!-- Redundant?, selection menu
-
-    <main class="screen in-adventure dim-story main-menu" id="select-topic">
-        <h1 class="game-title">MISTUH bis</h1>
-        <nav class="select-topic-list">
-            <ul>
-                <li><a href="#math-teach">Math</a></li>
-                <li><a href="#physics-teach">Physics</a></li>
-                <li><a href="#">Electro (locked)</a></li>
-                <li><a href="#main">Back to Menu</a></li>
-            </ul>
-        </nav>
-    </main>
--->
 
     <!-- change to my omb name card? -->
     <main class="screen in-adventure dim-story omb-menu" id="my-omb-card">
@@ -127,26 +160,72 @@
         </nav>
     </main>
 
-    <!-- OPTIONS MENU -->
-    <main class="screen main-menu" id="options">
-        <h1 class="game-title">OPTIONS</h1>
-        <nav class="main-menu-list">
-            <ul>
-                <li class="audio-control">
-                    <label for="sfx-slider">sfx: <span id="sfx-value">100%</span></label>
-                    <input type="range" id="sfx-slider" min="0" max="100" value="100">
-                </li>
-                <li class="audio-control">
-                    <label for="bgm-slider">bgm: <span id="bgm-value">100%</span></label>
-                    <input type="range" id="bgm-slider" min="0" max="100" value="100">
-                </li>
-                <li>
-                    <button type="button" id="bgm-switch">Track : Main theme</button>
-                </li>
-                <li><a href="#main" id="options-back-btn">Back</a></li>
-            </ul>
-        </nav>
-    </main>
+   <!-- OPTIONS MENU -->
+<main class="screen main-menu" id="options">
+    <h1 class="game-title options-title">OPTIONS</h1>
+
+    <!-- 3 Center Rotary Turntable Discs -->
+    <div class="options-turntables">
+        <!-- Disc 1: SFX Volume -->
+        <div class="rotary-unit">
+            <span class="rotary-label">SFX VOLUME</span>
+            <div class="rotary-disc" id="sfx-rotary" data-target="sfx-slider" role="slider" aria-label="SFX Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" tabindex="0">
+                <div class="rotary-platter">
+                    <div class="rotary-grooves"></div>
+                    <div class="rotary-tick"></div>
+                </div>
+                <div class="rotary-center-hub">
+                    <span id="sfx-value">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disc 2: BGM Volume -->
+        <div class="rotary-unit">
+            <span class="rotary-label">BGM VOLUME</span>
+            <div class="rotary-disc" id="bgm-rotary" data-target="bgm-slider" role="slider" aria-label="BGM Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" tabindex="0">
+                <div class="rotary-platter">
+                    <div class="rotary-grooves"></div>
+                    <div class="rotary-tick"></div>
+                </div>
+                <div class="rotary-center-hub">
+                    <span id="bgm-value">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disc 3: Track Selector with Tonearm Needle -->
+        <div class="rotary-unit">
+            <span class="rotary-label">SELECT TRACK</span>
+            <div class="track-turntable-wrap">
+                <!-- Tonearm Needle pointing onto the top-right of the disc -->
+                <div class="tonearm" aria-hidden="true">
+                    <div class="tonearm-base"></div>
+                    <div class="tonearm-arm"></div>
+                    <div class="tonearm-needle"></div>
+                </div>
+
+                <div class="rotary-disc track-disc" id="track-rotary" tabindex="0" aria-label="Spin to select track">
+                    <div class="rotary-platter">
+                        <div class="rotary-grooves"></div>
+                        <div class="track-markers" id="track-markers"></div>
+                    </div>
+                    <div class="rotary-center-hub track-hub">
+                        <span id="track-hub-name">Main theme</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden original controls so all existing JS event listeners & IDs still work -->
+    <div class="sr-only-links" aria-hidden="true">
+        <input type="range" id="sfx-slider" min="0" max="100" value="100">
+        <input type="range" id="bgm-slider" min="0" max="100" value="100">
+        <button type="button" id="bgm-switch">Track : Main theme</button>
+        <a href="#main" id="options-back-btn">Back</a>
+    </div>
+</main>
 
     <!-- LEARN MORE -->
     <main class="screen main-menu" id="LearnMore">
@@ -2067,6 +2146,342 @@ window.addEventListener("hashchange", function() {
     })();
 
     window.SignManager = SignManager;
+
+    //disc menu start
+document.addEventListener("DOMContentLoaded", () => {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const slicesContainer = document.getElementById("disc-slices");
+    const linkEls = Array.from(document.querySelectorAll(".sr-only-links a"));
+
+    if (!slicesContainer || linkEls.length === 0) return;
+
+    const INNER_R = 91;
+    const BASE_OUTER_R = 230;
+    const HOVER_OUTER_R = 248;
+    const GAP_DEG = 0;
+
+    const START_ANGLE = -112;
+    const TOTAL_SPAN = 148;
+
+    const items = linkEls.map((el) => {
+        const baseWeight = parseFloat(el.dataset.weight) || 1;
+        return {
+            el,
+            href: el.getAttribute("href") || "#",
+            dialogue: el.getAttribute("data-dialogue"),
+            id: el.id,
+            label: el.textContent.trim(),
+            color: el.dataset.color || "#8e24aa",
+            baseWeight,
+            weight: baseWeight,
+            weightVel: 0,
+            targetWeight: baseWeight,
+            outerR: BASE_OUTER_R,
+            outerRVel: 0,
+            targetOuterR: BASE_OUTER_R
+        };
+    });
+
+    let hoveredIndex = -1;
+
+    function polar(r, deg) {
+        const rad = (deg * Math.PI) / 180;
+        return { x: r * Math.cos(rad), y: r * Math.sin(rad) };
+    }
+
+    function describeWedge(rIn, rOut, startDeg, endDeg) {
+        const sOut = polar(rOut, startDeg);
+        const eOut = polar(rOut, endDeg);
+        const eIn = polar(rIn, endDeg);
+        const sIn = polar(rIn, startDeg);
+        const largeArc = endDeg - startDeg > 180 ? 1 : 0;
+
+        return [
+            `M ${sOut.x.toFixed(2)} ${sOut.y.toFixed(2)}`,
+            `A ${rOut} ${rOut} 0 ${largeArc} 1 ${eOut.x.toFixed(2)} ${eOut.y.toFixed(2)}`,
+            `L ${eIn.x.toFixed(2)} ${eIn.y.toFixed(2)}`,
+            `A ${rIn} ${rIn} 0 ${largeArc} 0 ${sIn.x.toFixed(2)} ${sIn.y.toFixed(2)}`,
+            "Z"
+        ].join(" ");
+    }
+
+    const domNodes = items.map((item, idx) => {
+        
+        const a = document.createElementNS(svgNS, "a");
+        a.setAttribute("href", item.href);
+        a.setAttribute("class", "disc-slice-group");
+        if (item.dialogue) a.setAttribute("data-dialogue", item.dialogue);
+
+        const path = document.createElementNS(svgNS, "path");
+        path.setAttribute("class", "disc-slice-path");
+        path.setAttribute("fill", item.color);
+
+        const text = document.createElementNS(svgNS, "text");
+        text.setAttribute("class", "disc-label");
+        text.textContent = item.label;
+
+        a.appendChild(path);
+        a.appendChild(text);
+        slicesContainer.appendChild(a);
+
+        // Hover handler
+        a.addEventListener("mouseenter", () => {
+            a.setAttribute("filter", "url(#wedge-pop-shadow)");
+            setHover(idx);
+        });
+
+        a.addEventListener("mouseleave", () => {
+            a.removeAttribute("filter");
+            setHover(-1);
+        });
+
+        a.addEventListener("click", (e) => {
+            if (item.id === "learnMoreButton") {
+                e.preventDefault();
+                item.el.click();
+            }
+        });
+
+        a.addEventListener("focus", () => setHover(idx));
+        a.addEventListener("blur", () => setHover(-1));
+
+        return { g: a, path, text };
+    });
+
+    // Off-screen back disc
+    const backFiller = document.createElementNS(svgNS, "path");
+    backFiller.setAttribute("fill", "#151c33");
+    backFiller.style.pointerEvents = "none";
+    backFiller.setAttribute(
+        "d",
+        describeWedge(INNER_R, BASE_OUTER_R, START_ANGLE + TOTAL_SPAN, START_ANGLE + 360)
+    );
+    slicesContainer.insertBefore(backFiller, slicesContainer.firstChild);
+
+    function setHover(index) {
+        hoveredIndex = index;
+        items.forEach((item, i) => {
+            if (hoveredIndex === -1) {
+                item.targetWeight = item.baseWeight;
+                item.targetOuterR = BASE_OUTER_R;
+                domNodes[i].text.style.opacity = "1";
+            } else if (i === hoveredIndex) {
+                item.targetWeight = item.baseWeight * 2.15;
+                item.targetOuterR = HOVER_OUTER_R;
+                domNodes[i].text.style.opacity = "1";
+            } else {
+                item.targetWeight = item.baseWeight * 0.48;
+                item.targetOuterR = BASE_OUTER_R - 4;
+                domNodes[i].text.style.opacity = "0.58";
+            }
+        });
+    }
+
+    const STIFFNESS = 0.24;
+    const DAMPING = 0.68;
+
+    function animate() {
+        let totalWeight = 0;
+
+        items.forEach((item) => {
+            item.weightVel = (item.weightVel + (item.targetWeight - item.weight) * STIFFNESS) * DAMPING;
+            item.weight += item.weightVel;
+
+            item.outerRVel = (item.outerRVel + (item.targetOuterR - item.outerR) * STIFFNESS) * DAMPING;
+            item.outerR += item.outerRVel;
+
+            totalWeight += item.weight;
+        });
+
+        const usableSpan = TOTAL_SPAN - GAP_DEG * items.length;
+        let cursorAngle = START_ANGLE;
+
+        items.forEach((item, i) => {
+            const sliceDeg = (item.weight / totalWeight) * usableSpan;
+            const start = cursorAngle + GAP_DEG / 2;
+            const end = start + sliceDeg;
+            const mid = (start + end) / 2;
+
+            domNodes[i].path.setAttribute(
+                "d",
+                describeWedge(INNER_R, item.outerR, start, end)
+            );
+
+            const labelRadius = (INNER_R + item.outerR) * 0.53;
+            const pos = polar(labelRadius, mid);
+            const textRot = mid > 90 || mid < -90 ? mid + 180 : mid;
+
+            domNodes[i].text.setAttribute("x", pos.x.toFixed(2));
+            domNodes[i].text.setAttribute("y", pos.y.toFixed(2));
+            domNodes[i].text.setAttribute(
+                "transform",
+                `rotate(${textRot.toFixed(2)} ${pos.x.toFixed(2)} ${pos.y.toFixed(2)})`
+            );
+
+            cursorAngle += sliceDeg + GAP_DEG;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+});
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Inject the "Back to Menu" tab that slides in from the right alongside the centered disc
+    const backBtn = document.createElement("a");
+    backBtn.href = "#main";
+    backBtn.className = "disc-back-btn";
+    backBtn.textContent = "← Back to Menu";
+    document.body.appendChild(backBtn);
+
+    function syncScreenState() {
+        const isOptions = window.location.hash === "#options";
+        document.body.classList.toggle("in-options", isOptions);
+    }
+
+    window.addEventListener("hashchange", syncScreenState);
+    syncScreenState();
+
+    backBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const hiddenBack = document.getElementById("options-back-btn");
+        if (hiddenBack) hiddenBack.click();
+        window.location.hash = "#main";
+    });
+
+    // 2. Helper: Attach circular spin-drag behavior to a rotary disc
+    function makeRotaryDisc(discEl, onDeltaAngle) {
+        if (!discEl) return;
+        let isDragging = false;
+        let prevAngle = 0;
+
+        function getPointerAngle(clientX, clientY) {
+            const rect = discEl.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            return Math.atan2(clientY - cy, clientX - cx) * (180 / Math.PI);
+        }
+
+        discEl.addEventListener("pointerdown", (e) => {
+            isDragging = true;
+            discEl.setPointerCapture(e.pointerId);
+            prevAngle = getPointerAngle(e.clientX, e.clientY);
+        });
+
+        discEl.addEventListener("pointermove", (e) => {
+            if (!isDragging) return;
+            const currentAngle = getPointerAngle(e.clientX, e.clientY);
+            let delta = currentAngle - prevAngle;
+
+            // Handle -180° / +180° wrap-around cleanly
+            if (delta > 180) delta -= 360;
+            if (delta < -180) delta += 360;
+
+            prevAngle = currentAngle;
+            onDeltaAngle(delta);
+        });
+
+        const endDrag = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            if (discEl.hasPointerCapture(e.pointerId)) {
+                discEl.releasePointerCapture(e.pointerId);
+            }
+        };
+
+        discEl.addEventListener("pointerup", endDrag);
+        discEl.addEventListener("pointercancel", endDrag);
+
+        // Also allow mouse wheel scrolling over the disc for quick fine-tuning
+        discEl.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            onDeltaAngle(e.deltaY < 0 ? 12 : -12);
+        }, { passive: false });
+    }
+
+    // 3. Setup SFX & BGM Volume Rotary Discs (0% - 100% over 270° of rotation)
+    function setupVolumeDisc(discId, sliderId, valueDisplayId) {
+        const discEl = document.getElementById(discId);
+        const sliderEl = document.getElementById(sliderId);
+        const displayEl = document.getElementById(valueDisplayId);
+        if (!discEl || !sliderEl || !displayEl) return;
+
+        const platter = discEl.querySelector(".rotary-platter");
+        let volume = parseInt(sliderEl.value, 10) || 100;
+
+        function renderVolume() {
+            // Map 0..100% across -135deg .. +135deg
+            const deg = -135 + (volume / 100) * 270;
+            platter.style.transform = `rotate(${deg.toFixed(1)}deg)`;
+            displayEl.textContent = `${volume}%`;
+            discEl.setAttribute("aria-valuenow", volume);
+        }
+
+        renderVolume();
+
+        makeRotaryDisc(discEl, (deltaDeg) => {
+            // 2.7 degrees of spin = 1% volume change
+            const nextVol = Math.max(0, Math.min(100, volume + deltaDeg / 2.7));
+            const rounded = Math.round(nextVol);
+
+            if (rounded !== volume) {
+                volume = rounded;
+                sliderEl.value = volume;
+                sliderEl.dispatchEvent(new Event("input", { bubbles: true }));
+                renderVolume();
+            } else {
+                volume = nextVol;
+                const deg = -135 + (volume / 100) * 270;
+                platter.style.transform = `rotate(${deg.toFixed(1)}deg)`;
+            }
+        });
+    }
+
+    setupVolumeDisc("sfx-rotary", "sfx-slider", "sfx-value");
+    setupVolumeDisc("bgm-rotary", "bgm-slider", "bgm-value");
+
+    // 4. Setup Track Selector Rotary Disc with Tonearm Needle
+    const trackDisc = document.getElementById("track-rotary");
+    const trackSwitchBtn = document.getElementById("bgm-switch");
+    const trackHubName = document.getElementById("track-hub-name");
+    const trackMarkersWrap = document.getElementById("track-markers");
+
+    if (trackDisc && trackSwitchBtn && trackHubName) {
+        const platter = trackDisc.querySelector(".rotary-platter");
+        // Customize this list to match your BGM tracks in order
+        const tracks = ["Main theme", "Chill Study", "Boss Rush", "Secret Track"];
+        const stepDeg = 360 / tracks.length;
+        let currentRotation = 0;
+        let currentTrackIdx = 0;
+
+        // Place visual groove markers on the record for each track
+        if (trackMarkersWrap) {
+            tracks.forEach((_, idx) => {
+                const dot = document.createElement("div");
+                dot.className = "track-marker-dot";
+                dot.style.transform = `rotate(${idx * stepDeg}deg)`;
+                trackMarkersWrap.appendChild(dot);
+            });
+        }
+
+        makeRotaryDisc(trackDisc, (deltaDeg) => {
+            currentRotation += deltaDeg;
+            platter.style.transform = `rotate(${currentRotation.toFixed(1)}deg)`;
+
+            // Determine which track sector sits under the tonearm needle (top-right ~35deg)
+            const normalized = (((35 - currentRotation) % 360) + 360) % 360;
+            const nextIdx = Math.floor(normalized / stepDeg) % tracks.length;
+
+            if (nextIdx !== currentTrackIdx) {
+                currentTrackIdx = nextIdx;
+                trackHubName.textContent = tracks[currentTrackIdx];
+                // Trigger your existing #bgm-switch button so your audio engine switches tracks
+                trackSwitchBtn.click();
+            }
+        });
+    }
+});
+//disc end
 </script>
 
 </body>
