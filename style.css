@@ -509,6 +509,124 @@ body:has(.vn-screen:target, .vn-overlay:target) #main {
 }
 /* paper ends */
 
+/* Thumbs up thingy popup */
+.thumbsup-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+}
+
+.thumbsup-modal[hidden] {
+    display: none;
+}
+
+/* da box */
+.thumbsup-card {
+    position: relative;
+    background: var(--cyan-bg);             
+    color: #2b2b2b;     /* text color */
+    font-size: 1.35rem;
+    border: 3px solid #2b2b2b;  
+    border-radius: 16px;              
+    padding: 1.5rem 2rem;
+    width: min(90vw, 350px);
+    box-shadow: 6px 6px 0px var(--pink-shadow);  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.thumbsup-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.thumbsup-video-wrap {
+    width: 220px;
+    height: 165px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+}
+
+#thumbsup-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+}
+
+/* circular Progress Ring */
+.thumbsup-ring-wrap {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+}
+
+.thumbsup-ring {
+    transform: rotate(-90deg);
+}
+
+.thumbsup-ring-bg,
+.thumbsup-ring-fill {
+    fill: none;
+    stroke-width: 6;
+}
+
+.thumbsup-ring-bg {
+    stroke: rgba(255, 255, 255, 0.15);
+}
+
+.thumbsup-ring-fill {
+    stroke: var(--pink-accent);
+    stroke-linecap: round;
+    stroke-dasharray: 163.36;
+    stroke-dashoffset: 163.36;
+}
+
+.thumbsup-icon {
+    position: absolute;
+    font-size: 1.4rem;
+}
+
+#main.zoom-fade-out {
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 1.6s ease, opacity 1.6s ease; /* lenght of fade to black */
+    pointer-events: none;
+}
+
+#black-fade-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 950;
+    transition: opacity 2.6s ease; /* length of fade to black */
+}
+
+#black-fade-overlay.active {
+    opacity: 1;
+}
+
+/* Thumbs up thingy popup ends */
+
+
+
 /* affection meter starts */
 .affection-hud {
     position: fixed;
