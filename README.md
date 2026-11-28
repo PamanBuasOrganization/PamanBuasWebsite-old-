@@ -13,7 +13,7 @@
 <table>
 <tr>
 <td width="50%" valign="top">
-<img src="images/girl-peace-sign.jpg" alt="image" width="100%">
+<img src="images/girl-peace-sign.png" alt="image" width="100%">
 <br><b>Topleft feature blabla</b><br>
 yapyapyapyapyapyapyapypaypapyapypaypaypaypapypyay
 </td>
