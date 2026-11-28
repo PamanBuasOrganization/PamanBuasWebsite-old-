@@ -124,23 +124,6 @@
             </ul>
         </nav>
     </main>
-   
-    
-    <!-- change to handrwiting panel? -->
-    <main class="screen in-adventure dim-story paper-menu" id="paper-screen">
-        <h1 class="paper-title">Pisiks</h1>
-        
-        <!-- panel -->
-        <div id="paper-panel">
-            
-        </div>
-    
-        <nav class="omb-navigation">
-            <ul>
-                <li><a href="#main">Back to Menu</a></li>
-            </ul>
-        </nav>
-    </main>
 
     <!-- OPTIONS MENU -->
     <main class="screen main-menu" id="options">
@@ -225,6 +208,33 @@
         </div>
     </div>
 
+    <!-- THUMBS UP START POPUP -->
+    <div class="thumbsup-modal" id="thumbsup-modal" hidden>
+        <div class="thumbsup-card">
+            <button type="button" class="thumbsup-close" id="thumbsup-close" title="Cancel">✕</button>
+            <h3>Camera Check!</h3>
+            <p id="thumbsup-status">Loading camera...</p>
+
+            <div class="thumbsup-video-wrap">
+                <video id="thumbsup-video" autoplay playsinline muted></video>
+            </div>
+
+            <div class="thumbsup-ring-wrap">
+                <svg class="thumbsup-ring" width="64" height="64" viewBox="0 0 64 64">
+                    <circle class="thumbsup-ring-bg" cx="32" cy="32" r="26" />
+                    <circle class="thumbsup-ring-fill" id="thumbsup-ring-fill" cx="32" cy="32" r="26" />
+                </svg>
+                <span class="thumbsup-icon">👍</span> <!-- sus banget jir ada emoji gitu kwkwkw -->
+            </div>
+
+            <small id="thumbsup-hint">Hold a thumbs up for 3 seconds to begin!</small>
+        </div>
+    </div>
+
+    <!-- FADE TO BLACK OVERLAY -->
+    <div id="black-fade-overlay"></div>
+
+
     <!-- AFFECTION METER POPUP -->
     <div class="affection-hud" id="affection-hud" hidden>
         <div class="affection-header">
@@ -262,6 +272,7 @@
             start: "audio/click.mp3",
             crystal: "audio/crystal_sfx.mp3",
             affection: "audio/crystal_sfx.mp3",
+            beginning: "audio/beginning.mp3",
 
             //character sounds
             mc: "",
@@ -1372,12 +1383,67 @@
 
         loadScene("story");
 
+        loadScene("story");
+
+        const mainScreen       = document.getElementById("main");
+        const thumbsupModal    = document.getElementById("thumbsup-modal");
+        const thumbsupVideo    = document.getElementById("thumbsup-video");
+        const thumbsupStatus   = document.getElementById("thumbsup-status");
+        const thumbsupRingFill = document.getElementById("thumbsup-ring-fill");
+        const blackFadeOverlay = document.getElementById("black-fade-overlay");
+
+        document.getElementById("thumbsup-close")?.addEventListener("click", () => {
+            thumbsupModal.hidden = true;
+            thumbsupVideo.srcObject = null;
+            thumbsupRingFill.style.strokeDashoffset = 163.36;
+            SignManager.setChallenge(null);
+            if (!document.getElementById("opt-cam")?.checked) SignManager.stopCamera();
+        });
+
+        //The script for starting animation camera thang
         document.querySelectorAll("[data-dialogue]").forEach((trigger) => {
-            trigger.addEventListener("click", () => {
-                activeSceneKey = dialogues[trigger.dataset.dialogue] ? trigger.dataset.dialogue : "story";
-                currentLine = 0;
-                if (window.location.hash === "#story") {
-                    showLine(0);
+            trigger.addEventListener("click", async (event) => {
+                event.preventDefault();
+                const targetScene = dialogues[trigger.dataset.dialogue] ? trigger.dataset.dialogue : "story";
+
+                thumbsupRingFill.style.strokeDashoffset = 163.36;
+                thumbsupStatus.textContent = "Starting camera...";
+                thumbsupModal.hidden = false;
+
+                try {
+                    await SignManager.startCamera({ silentHud: true, mirrorVideo: thumbsupVideo });
+                    thumbsupStatus.textContent = "Show a thumbs up!";
+
+                    SignManager.setChallenge({
+                        sign: "Thumb_Up",
+                        sfx: "beginning",
+                        holdMs: 3000, //change for the lenght
+
+
+                        onProgress: (p) => {
+                            thumbsupRingFill.style.strokeDashoffset = 163.36 * (1 - p);
+                            thumbsupStatus.textContent = p > 0 ? `Keep holding... ${Math.ceil((1 - p) * 5)}s` : "Show a 👍 thumbs up!";
+                        },
+                        onSuccess: () => {
+                            thumbsupModal.hidden = true;
+                            thumbsupVideo.srcObject = null;
+                            if (!document.getElementById("opt-cam")?.checked) SignManager.stopCamera();
+
+                            mainScreen.classList.add("zoom-fade-out");
+                            blackFadeOverlay.classList.add("active");
+
+                            setTimeout(() => {
+                                activeSceneKey = targetScene;
+                                currentLine = 0;
+                                window.location.hash = "#story";
+                                showLine(0);
+                                mainScreen.classList.remove("zoom-fade-out");
+                                blackFadeOverlay.classList.remove("active");
+                            }, 1600); // fade to black length
+                        }
+                    });
+                } catch {
+                    thumbsupStatus.textContent = "no camera access :(";
                 }
             });
         });
@@ -1643,10 +1709,19 @@ window.addEventListener("hashchange", function() {
             });
         }
 
-        async function startCamera() {
-            if (isRunning) return;
-            hud.hidden = false;
-            if (camCheckbox) camCheckbox.checked = true;
+        async function startCamera({ silentHud = false, mirrorVideo = null } = {}) {
+            if (isRunning) {
+                if (mirrorVideo && stream) {
+                    mirrorVideo.srcObject = stream;
+                    await mirrorVideo.play().catch(() => {});
+                }
+                return;
+            }
+
+            if (!silentHud) {
+                hud.hidden = false;
+                if (camCheckbox) camCheckbox.checked = true;
+            }
 
             try {
                 await initModel();
@@ -1660,12 +1735,18 @@ window.addEventListener("hashchange", function() {
                 video.srcObject = stream;
                 await video.play();
 
+                if (mirrorVideo) {
+                    mirrorVideo.srcObject = stream;
+                    await mirrorVideo.play();
+                }
+
                 isRunning = true;
                 statusEl.textContent = "Camera Active";
                 requestAnimationFrame(detectLoop);
             } catch (err) {
                 statusEl.textContent = "Camera blocked/unavailable";
                 console.error(err);
+                throw err;
             }
         }
 
@@ -1686,8 +1767,10 @@ window.addEventListener("hashchange", function() {
         function resetHold() {
             holdStartTime = null;
             if (progressEl) progressEl.style.width = "0%";
+            if (activeChallenge && typeof activeChallenge.onProgress === "function") {
+                activeChallenge.onProgress(0);
+            }
         }
-
         // Set a target sign for dialogue or math/physics quizzes
         function setChallenge(challenge) {
             activeChallenge = challenge || null;
@@ -1700,11 +1783,15 @@ window.addEventListener("hashchange", function() {
             }
         }
 
-        function evaluateSign(detectedSign) {
+        function evaluateSign(detectedSign, builtinGesture = null) {
             if (!activeChallenge) return;
 
             const target = String(activeChallenge.sign);
-            if (detectedSign !== target) {
+            const isMatch = target === "Thumb_Up"
+                ? builtinGesture === "Thumb_Up"
+                : detectedSign === target;
+
+            if (!isMatch) {
                 if (!DYNAMIC_SIGNS[target]) resetHold();
                 return;
             }
@@ -1713,7 +1800,7 @@ window.addEventListener("hashchange", function() {
                 const completed = activeChallenge;
                 motionBuffer.length = 0;
                 setChallenge(null);
-                if (window.AudioManager) AudioManager.playSFX("crystal");
+                if (window.AudioManager) AudioManager.playSFX("beginning");
                 if (typeof completed.onSuccess === "function") {
                     completed.onSuccess();
                 }
@@ -1728,10 +1815,14 @@ window.addEventListener("hashchange", function() {
             const progress = Math.min((performance.now() - holdStartTime) / holdDuration, 1);
             progressEl.style.width = `${Math.round(progress * 100)}%`;
 
+            if (typeof activeChallenge.onProgress === "function") {
+                activeChallenge.onProgress(progress);
+            }
+
             if (progress >= 1) {
                 const completed = activeChallenge;
                 setChallenge(null);
-                if (window.AudioManager) AudioManager.playSFX("crystal");
+                if (window.AudioManager) AudioManager.playSFX("beginning");
                 if (typeof completed.onSuccess === "function") {
                     completed.onSuccess();
                 }
@@ -1752,15 +1843,21 @@ window.addEventListener("hashchange", function() {
                         if (motionBuffer.length > 24) motionBuffer.shift();
                     }
 
-                    const staticMatch  = matchStaticSign(latestPoseVector);
-                    const dynamicMatch = matchDynamicSign();
-                    const detectedSign = dynamicMatch?.label || staticMatch?.label || null;
+                    const staticMatch    = matchStaticSign(latestPoseVector);
+                    const dynamicMatch   = matchDynamicSign();
+                    const topGesture     = results.gestures?.[0]?.[0];
+                    const builtinGesture = (topGesture && topGesture.categoryName !== "None" && topGesture.score > 0.6)
+                        ? topGesture.categoryName
+                        : null;
+                    const detectedSign   = dynamicMatch?.label || staticMatch?.label || null;
 
                     detectedEl.textContent = detectedSign
                         ? `Sign: ${detectedSign}`
-                        : `${results.landmarks.length} hand(s) tracked`;
+                        : builtinGesture
+                            ? `Gesture: ${builtinGesture}`
+                            : `${results.landmarks.length} hand(s) tracked`;
 
-                    evaluateSign(detectedSign);
+                    evaluateSign(detectedSign, builtinGesture);
                 } else {
                     latestPoseVector = null;
                     motionBuffer.length = 0;
