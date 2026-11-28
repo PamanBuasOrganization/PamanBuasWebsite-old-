@@ -16,7 +16,7 @@
 
         <!-- character infront of background-->
         <div class="vn-character">
-            <img id="story-sprite" src="images/silentvoice.jpg" alt="Guide Character">
+            <img id="story-sprite" src=null alt="Guide Character">
         </div>
     </div>
 
@@ -124,23 +124,6 @@
             </ul>
         </nav>
     </main>
-   
-    
-    <!-- change to handrwiting panel? -->
-    <main class="screen in-adventure dim-story paper-menu" id="paper-screen">
-        <h1 class="paper-title">Pisiks</h1>
-        
-        <!-- panel -->
-        <div id="paper-panel">
-            
-        </div>
-    
-        <nav class="omb-navigation">
-            <ul>
-                <li><a href="#main">Back to Menu</a></li>
-            </ul>
-        </nav>
-    </main>
 
     <!-- OPTIONS MENU -->
     <main class="screen main-menu" id="options">
@@ -225,6 +208,33 @@
         </div>
     </div>
 
+    <!-- THUMBS UP START POPUP -->
+    <div class="thumbsup-modal" id="thumbsup-modal" hidden>
+        <div class="thumbsup-card">
+            <button type="button" class="thumbsup-close" id="thumbsup-close" title="Cancel">✕</button>
+            <h3>Camera Check!</h3>
+            <p id="thumbsup-status">Loading camera...</p>
+
+            <div class="thumbsup-video-wrap">
+                <video id="thumbsup-video" autoplay playsinline muted></video>
+            </div>
+
+            <div class="thumbsup-ring-wrap">
+                <svg class="thumbsup-ring" width="64" height="64" viewBox="0 0 64 64">
+                    <circle class="thumbsup-ring-bg" cx="32" cy="32" r="26" />
+                    <circle class="thumbsup-ring-fill" id="thumbsup-ring-fill" cx="32" cy="32" r="26" />
+                </svg>
+                <span class="thumbsup-icon">👍</span> <!-- sus banget jir ada emoji gitu kwkwkw -->
+            </div>
+
+            <small id="thumbsup-hint">Hold a thumbs up for 3 seconds to begin!</small>
+        </div>
+    </div>
+
+    <!-- FADE TO BLACK OVERLAY -->
+    <div id="black-fade-overlay"></div>
+
+
     <!-- AFFECTION METER POPUP -->
     <div class="affection-hud" id="affection-hud" hidden>
         <div class="affection-header">
@@ -261,18 +271,24 @@
             blip:  "audio/blip.mp3",
             start: "audio/click.mp3",
             crystal: "audio/crystal_sfx.mp3",
-            affection: "audio/crystal_sfx.mp3" 
+            affection: "audio/crystal_sfx.mp3",
+            beginning: "audio/beginning.mp3",
+
+            //character sounds
+            mc: "",
+            celine: "", //prolly paper writing sounds
+            pamanBuas: "" //asgore sound?
+
         };
 
         // MUSIC HERE ANJAY
         const bgmTracks = [
-            { key: "menu",    title: "Main Theme",         src: "audio/music_1.mp3" },
-            { key: "mrbeast", title: "im mr beast.",       src: "audio/balls.mp3" },
-            { key: "idk",     title: "tuff",               src: "audio/music_2.mp3" },
-            { key: "secret",  title: "???",                src: "audio/tuff.mp3", image: "images/tuff.png", spin: true },
-            { key: "ponker",  title: "ponk",               src: "audio/ponks.mp3" },
-            { key: "ego",     title: "egoism is when no",  src: "audio/ego.mp3",  image: "images/maxwhenno.jpg" },
-            { key: "rus",     title: "h",                  src: "audio/kambing.mp3" }
+            { key: "menu",    title: "Main Theme",          src: "audio/music_1.mp3" },
+            { key: "umapyoi",  title: "umapyoi",            src: "audio/uma.mp3" },
+            { key: "idk",     title: "tuff",                src: "audio/music_2.mp3" },
+            { key: "rus",     title: "russian",             src: "audio/kambing.mp3" },
+            { key: "mrbeast", title: "paman buas.",        src: "audio/balls.mp3" },
+            { key: "secret",  title: "???",                 src: "audio/tuff.mp3", image: "images/tuff.png", spin: true }
         ];
 
         // Load saved volumes from localStorage (defaults: SFX 100%, Music 50%)
@@ -289,12 +305,41 @@
             updateMusicVisual(bgmTracks[currentTrackIndex]);
         });
 
-        function playSFX(name) {
+        const sfxPools = {};
+        const MAX_POOL_SIZE = 8;
+
+        function playSFX(name, options = {}) {
             const src = sfxFiles[name];
             if (!src || sfxVolume <= 0) return;
 
-            const sound = new Audio(src);
+            if (!sfxPools[name]) {
+                sfxPools[name] = [];
+            }
+
+            const pool = sfxPools[name];
+            let sound = pool.find((el) => el.paused || el.ended);
+
+            if (!sound) {
+                if (pool.length < MAX_POOL_SIZE) {
+                    sound = new Audio(src);
+                    pool.push(sound);
+                } else {
+                    sound = pool.shift();
+                    pool.push(sound);
+                }
+            }
+
+            sound.pause();
+            sound.currentTime = 0;
             sound.volume = sfxVolume;
+
+            //pitch variations for the dialogue
+            if (options.pitchJitter){
+                sound.playbackRate = 1 + (Math.random() * 2 -1)* options.pitchJitter;
+            } else {
+                sound.playbackRate = 1;
+            }
+
             sound.play().catch(() => {});
         }
 
@@ -357,7 +402,7 @@
             }, { once: true });
         });
 
-        // 3. AUTOMATIC GLOBAL HOVER & CLICK SFX FOR ALL MENUS
+        // AUTOMATIC GLOBAL HOVER & CLICK SFX FOR ALL MENUS
         const interactiveSelector = "a, button, .acc-trigger, .acc-item, [data-sfx]";
         let lastHovered = null;
 
@@ -381,7 +426,7 @@
             playSFX(target.dataset.sfx || "click");
         });
 
-        // 4. WIRE UP OPTIONS MENU CONTROLS
+        // WIRE UP OPTIONS MENU CONTROLS
         document.addEventListener("DOMContentLoaded", () => {
             const sfxSlider = document.getElementById("sfx-slider");
             const sfxValue  = document.getElementById("sfx-value");
@@ -436,22 +481,19 @@
             somethingUnlocked: false
         };  
     
+
+        //STORY START
         const dialogues = {
             story: {
                 nextScreen: "#main", // Change to "#select-topic" if you uncomment #select-topic
                 lines: [
-                    {
-                        name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
-                        size: "0vh",
-                        bg: "images/dokidoki.webp",
-                        text: "What a beautifull morning today is."
-                    },
+                    /*
                     {
                         name: "Paman Buas",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "...",
+                        text: "test...  ...  ...kaboom!",
+
+                        //omb card start
                         paper: { //kertas pop up kyk gini MUKA W GANTI NANTI PLIS
                             html: `
                             <div class="paper-title">
@@ -497,6 +539,9 @@
                             </div>
                             `
                         }
+                        //omb card ends
+
+                    
                     },
                     {
                         name: "Paman Buas",
@@ -515,12 +560,15 @@
                         sprite: "images/pamanbuasfake.png",
                         size: "0vh",
                         bg: "images/umn.jpg",
-                        text: "meanwhile at wemen..."
+                        text: "meanwhile at wemen...",
+                        voice: null //For no sounds
                     },
+
+                    */
                     {
                         name: "{name}",
                         size: "0vh",
-                        bg: "images/omb_bg.jpg",
+                        bg: "images/black.jpg",
                         text: "It was around late august"
                     },
                     {
@@ -550,20 +598,81 @@
                     },
                     {
                         name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
-                        size: "120vh",
-                        text: "(girl approaches)"
-                    },
-                    {
-                        name: "girl ???",
                         size: "0vh",
-                        text: "(starts writing on a yellow sticky note)"
+                        text: "Truth be told, i dont even remember how i ended up here"
                     },
                     {
-                        name: "girl ??? in writing",
-                        size: "120vh",
+                        bg: "images/omb_bg.jpg",
+                        name: "{name}",
+                        size: "0vh",
+                        text: "(its so loud here)"
+                    },
+                    {
+                        name: "{name}",
+                        size: "0vh",
+                        text: "(i think im supposed to find my group)"
+                    },
+                    {
+                        name: "{name}",
+                        size: "0vh",
+                        text: "(i wish they could just find me instead)"
+                    },
+
+                    {
+                        name: "???",
+                        size: "0vh",
+                        text: "(someone taps your back)"
+                    },
+                    {
+                        name: "{name}",
                         sprite: "images/girl-peace-sign.png",
-                        text: "Hi whats ur name?"
+                        text: "he-Hey heyyy uh... um",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "i didn't hear you there",
+                        size: "120vh",
+                    },
+                    {
+                        name: "???",
+                        text: "...",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "(i dont think she can hear me admist all the noise)",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "I DIDNT HEAR YOU THEREE! hehe...uhh",
+                        size: "120vh",
+                    },
+                    {
+                        name: "???",
+                        text: "...",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "(is she deaf)?",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "(nevermind)",
+                        size: "120vh",
+                    },
+                    {
+                        name: "???",
+                        text: "(starts writing on a yellow sticky note)",
+                        size: "120vh"
+                    },
+                    {
+                        name: "??? (in writing)",
+                        text: "hi whats ur name???",
+                        size: "120vh"
                     },
                     {
                         name: "{name}",
@@ -572,11 +681,11 @@
                         text: "Hi whats ur name?",
                         choices: [
                             {
-                                label: "say your name",
+                                label: "tell her my name",
                                 nextScene: "Timeline_1"
                             },
                             {
-                                label: "show card",
+                                label: "show namecard",
                                 action: () => { }, //add view omb card
                                 nextScene: "Timeline_2"
                             }
@@ -585,7 +694,7 @@
                 ]
             },
 
-            // Timeline 1
+            // say your name
             Timeline_1: {
                 nextScreen: "#main",
                 lines: [
@@ -597,31 +706,31 @@
                     },
                     {
                         name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(she waves her hand)"
+                        text: "(no response again)?"
                     },
                     {
-                        name: "girl ???",
-                        sprite: "images/girl-peace-sign.png",
+                        name: "???",
                         size: "120vh",
                         text: "(she points at herself, and then points at her card)" //add omb card for her
                     },
                     {
                         name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
                         text: "Celine... the third?"
                     },
                     {
                         name: "Celine III",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(she laughs, then nods)"
+                        text: "(she looks at the face your making and laughs)"
                     },
                     {
                         name: "Celine III",
-                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "she nods with a grin on her face ;)"
+                    },
+                    {
+                        name: "Celine III",
                         size: "120vh",
                         text: "(she points at your card)",
                         nextScene: "Timeline_2"
@@ -629,7 +738,7 @@
                 ]
             },
 
-            // Timeline 2
+            // show card
             Timeline_2: {
                 nextScreen: "#main",
                 lines: [
@@ -655,14 +764,8 @@
                         name: "Celine III",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(she gets annoyed)",
+                        text: "...", //annoyed face
                         affection: -15
-                    },
-                    {
-                        name: "Celine III",
-                        sprite: "images/girl-peace-sign.png",
-                        size: "120vh",
-                        text: "(then she points to her ear)"
                     },
                     {
                         name: "Celine III",
@@ -814,7 +917,7 @@
                         name: "{name}",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(if only a girl could talk to her)"
+                        text: "(if only someone could talk to her)"
                     },
                     {
                         name: "{name}",
@@ -1007,7 +1110,7 @@
             // Hide element once fade out completes
             const hideTimer = setTimeout(() => {
                 affectionHud.hidden = true;
-            }, 1750);
+            }, 1950);
 
             affectionTimers.push(actTimer, fadeOutTimer, hideTimer);
         }
@@ -1032,9 +1135,91 @@
             link.addEventListener("click", (event) => event.preventDefault());
         });
 
+        // default stuff
         let activeSceneKey = "story";
         let currentLine = 0;
         let hasActiveChoices = false;
+
+        // TYPEWRITER START
+        // typewriter state for the dialogue
+        let typingTimer = null;
+        let isTyping = false;
+        let fullCurrentText = "";
+        let pendingChoices = null;
+
+        // stop typing
+        function stopTyping (){
+            if (typingTimer){
+                clearTimeout(typingTimer);
+                typingTimer = null;
+            }
+            isTyping = false;
+        }
+
+        // finish typing
+        function finishTyping(){
+            stopTyping();
+            vnText.textContent = fullCurrentText;
+            renderChoices(pendingChoices);
+        }
+
+        // the typewriter function, 
+        function typeDialogue(text, 
+        {   speed = 35,     //change typewriter delay, bigger number -> slower
+            voice = "mc", //change sound
+            choices = null 
+        } = {}) {
+
+            stopTyping();
+            fullCurrentText = text;
+            pendingChoices = choices;
+            vnText.textContent = "";
+            vnChoices.innerHTML = "";
+            hasActiveChoices = false;
+
+            if (vnNextIndicator) {
+                vnNextIndicator.style.display = "none";
+            }
+
+            // disables when not in story
+            if (window.location.hash !== "#story" || !text) {
+                finishTyping();
+                return;
+            }
+
+            isTyping = true;
+            let charIndex = 0;
+
+            function typeNextChar() {
+                if (!isTyping) return;
+
+                const char = fullCurrentText[charIndex];
+                vnText.textContent += char;
+                charIndex++;
+
+                // Play blip sound for each non-space character
+                if (voice && char.trim() !== "" && window.AudioManager) {
+                    AudioManager.playSFX(voice, { pitchJitter: 0.08 });
+                }
+
+                if (charIndex >= fullCurrentText.length) {
+                    finishTyping();
+                    return;
+                }
+
+                // Indie game punctuation pauses
+                let delay = speed;
+                if (char === "." || char === "!" || char === "?") {
+                    delay = speed * 15;
+                } else if (char === ",") {
+                    delay = speed * 10;
+                }
+
+                typingTimer = setTimeout(typeNextChar, delay);
+            }
+
+            typeNextChar();
+        }
 
         function loadScene(sceneKey) {
             activeSceneKey = dialogues[sceneKey] ? sceneKey : "story";
@@ -1113,10 +1298,9 @@
             const scene = dialogues[activeSceneKey];
             const line = scene.lines[index];
             const displayName = simState.playerName || "Player";
+            const resolvedText = (line.text || "").replaceAll("{name}", displayName);
 
             vnName.textContent = (line.name || "").replaceAll("{name}", displayName);
-            vnText.textContent = (line.text || "").replaceAll("{name}", displayName);
-            AudioManager.playSFX("blip");
 
             if (line.sprite && stageSprite) {
                 stageSprite.src = line.sprite;
@@ -1135,7 +1319,12 @@
             }
 
             updatePaper(line.paper);
-            renderChoices(line.choices);
+
+            typeDialogue(resolvedText, {
+                speed: line.speed,
+                voice: line.voice,
+                choices: line.choices
+            });
 
             // Hook up sign language challenge if this dialogue line defines one
             if (window.SignManager) {
@@ -1168,6 +1357,11 @@
 
         // Dialogue progression
         function advanceDialogue() {
+            if (isTyping) {
+                finishTyping();
+                return;
+            }
+
             if (hasActiveChoices) return;
 
             const scene = dialogues[activeSceneKey];
@@ -1192,29 +1386,101 @@
 
         loadScene("story");
 
+        loadScene("story");
+
+        const mainScreen       = document.getElementById("main");
+        const thumbsupModal    = document.getElementById("thumbsup-modal");
+        const thumbsupVideo    = document.getElementById("thumbsup-video");
+        const thumbsupStatus   = document.getElementById("thumbsup-status");
+        const thumbsupRingFill = document.getElementById("thumbsup-ring-fill");
+        const blackFadeOverlay = document.getElementById("black-fade-overlay");
+
+        document.getElementById("thumbsup-close")?.addEventListener("click", () => {
+            thumbsupModal.hidden = true;
+            thumbsupVideo.srcObject = null;
+            thumbsupRingFill.style.strokeDashoffset = 163.36;
+            SignManager.setChallenge(null);
+            if (!document.getElementById("opt-cam")?.checked) SignManager.stopCamera();
+        });
+
+        //The script for starting animation camera thang
         document.querySelectorAll("[data-dialogue]").forEach((trigger) => {
-            trigger.addEventListener("click", () => {
-                loadScene(trigger.dataset.dialogue);
+            trigger.addEventListener("click", async (event) => {
+                event.preventDefault();
+                const targetScene = dialogues[trigger.dataset.dialogue] ? trigger.dataset.dialogue : "story";
+
+                thumbsupRingFill.style.strokeDashoffset = 163.36;
+                thumbsupStatus.textContent = "Starting camera...";
+                thumbsupModal.hidden = false;
+
+                try {
+                    await SignManager.startCamera({ silentHud: true, mirrorVideo: thumbsupVideo });
+                    thumbsupStatus.textContent = "Show a thumbs up!";
+
+                    SignManager.setChallenge({
+                        sign: "Thumb_Up",
+                        sfx: "beginning",
+                        holdMs: 3000, //change for the lenght
+
+
+                        onProgress: (p) => {
+                            thumbsupRingFill.style.strokeDashoffset = 163.36 * (1 - p);
+                            thumbsupStatus.textContent = p > 0 ? `Keep holding... ${Math.ceil((1 - p) * 5)}s` : "Show a 👍 thumbs up!";
+                        },
+                        onSuccess: () => {
+                            thumbsupModal.hidden = true;
+                            thumbsupVideo.srcObject = null;
+                            if (!document.getElementById("opt-cam")?.checked) SignManager.stopCamera();
+
+                            mainScreen.classList.add("zoom-fade-out");
+                            blackFadeOverlay.classList.add("active");
+
+                            setTimeout(() => {
+                                activeSceneKey = targetScene;
+                                currentLine = 0;
+                                window.location.hash = "#story";
+                                showLine(0);
+                                mainScreen.classList.remove("zoom-fade-out");
+                                blackFadeOverlay.classList.remove("active");
+                            }, 2800); // fade to black length
+                        }
+                    });
+                } catch {
+                    thumbsupStatus.textContent = "no camera access :(";
+                }
             });
         });
 
         vnOverlay.addEventListener("click", (event) => {
-            if (event.target.closest(".vn-skip, .paper-card") || hasActiveChoices) return;
+            if (event.target.closest(".vn-skip, .paper-card")) return;
+            if (isTyping) {
+                finishTyping();
+                return;
+            }
+            if (hasActiveChoices) return;
             advanceDialogue();
         });
 
         document.addEventListener("keydown", (event) => {
             if (event.target.matches("input, textarea")) return;
             const isDialogueOpen = window.location.hash === "#story";
-            if (isDialogueOpen && !hasActiveChoices && (event.key === " " || event.key === "Enter")) {
+            if (isDialogueOpen && (event.key === " " || event.key === "Enter")) {
                 event.preventDefault();
-                advanceDialogue();
+                if (isTyping) {
+                    finishTyping();
+                    return;
+                }
+                if (!hasActiveChoices) {
+                    advanceDialogue();
+                }
             }
         });
 
         window.addEventListener("hashchange", () => {
             if (window.location.hash === "#story") {
                 showLine(currentLine);
+            } else {
+                stopTyping();
             }
         });
     });
@@ -1446,10 +1712,19 @@ window.addEventListener("hashchange", function() {
             });
         }
 
-        async function startCamera() {
-            if (isRunning) return;
-            hud.hidden = false;
-            if (camCheckbox) camCheckbox.checked = true;
+        async function startCamera({ silentHud = false, mirrorVideo = null } = {}) {
+            if (isRunning) {
+                if (mirrorVideo && stream) {
+                    mirrorVideo.srcObject = stream;
+                    await mirrorVideo.play().catch(() => {});
+                }
+                return;
+            }
+
+            if (!silentHud) {
+                hud.hidden = false;
+                if (camCheckbox) camCheckbox.checked = true;
+            }
 
             try {
                 await initModel();
@@ -1463,12 +1738,18 @@ window.addEventListener("hashchange", function() {
                 video.srcObject = stream;
                 await video.play();
 
+                if (mirrorVideo) {
+                    mirrorVideo.srcObject = stream;
+                    await mirrorVideo.play();
+                }
+
                 isRunning = true;
                 statusEl.textContent = "Camera Active";
                 requestAnimationFrame(detectLoop);
             } catch (err) {
                 statusEl.textContent = "Camera blocked/unavailable";
                 console.error(err);
+                throw err;
             }
         }
 
@@ -1489,8 +1770,10 @@ window.addEventListener("hashchange", function() {
         function resetHold() {
             holdStartTime = null;
             if (progressEl) progressEl.style.width = "0%";
+            if (activeChallenge && typeof activeChallenge.onProgress === "function") {
+                activeChallenge.onProgress(0);
+            }
         }
-
         // Set a target sign for dialogue or math/physics quizzes
         function setChallenge(challenge) {
             activeChallenge = challenge || null;
@@ -1503,11 +1786,15 @@ window.addEventListener("hashchange", function() {
             }
         }
 
-        function evaluateSign(detectedSign) {
+        function evaluateSign(detectedSign, builtinGesture = null) {
             if (!activeChallenge) return;
 
             const target = String(activeChallenge.sign);
-            if (detectedSign !== target) {
+            const isMatch = target === "Thumb_Up"
+                ? builtinGesture === "Thumb_Up"
+                : detectedSign === target;
+
+            if (!isMatch) {
                 if (!DYNAMIC_SIGNS[target]) resetHold();
                 return;
             }
@@ -1516,7 +1803,7 @@ window.addEventListener("hashchange", function() {
                 const completed = activeChallenge;
                 motionBuffer.length = 0;
                 setChallenge(null);
-                if (window.AudioManager) AudioManager.playSFX("crystal");
+                if (window.AudioManager) AudioManager.playSFX("beginning");
                 if (typeof completed.onSuccess === "function") {
                     completed.onSuccess();
                 }
@@ -1531,10 +1818,14 @@ window.addEventListener("hashchange", function() {
             const progress = Math.min((performance.now() - holdStartTime) / holdDuration, 1);
             progressEl.style.width = `${Math.round(progress * 100)}%`;
 
+            if (typeof activeChallenge.onProgress === "function") {
+                activeChallenge.onProgress(progress);
+            }
+
             if (progress >= 1) {
                 const completed = activeChallenge;
                 setChallenge(null);
-                if (window.AudioManager) AudioManager.playSFX("crystal");
+                if (window.AudioManager) AudioManager.playSFX("beginning");
                 if (typeof completed.onSuccess === "function") {
                     completed.onSuccess();
                 }
@@ -1555,15 +1846,21 @@ window.addEventListener("hashchange", function() {
                         if (motionBuffer.length > 24) motionBuffer.shift();
                     }
 
-                    const staticMatch  = matchStaticSign(latestPoseVector);
-                    const dynamicMatch = matchDynamicSign();
-                    const detectedSign = dynamicMatch?.label || staticMatch?.label || null;
+                    const staticMatch    = matchStaticSign(latestPoseVector);
+                    const dynamicMatch   = matchDynamicSign();
+                    const topGesture     = results.gestures?.[0]?.[0];
+                    const builtinGesture = (topGesture && topGesture.categoryName !== "None" && topGesture.score > 0.6)
+                        ? topGesture.categoryName
+                        : null;
+                    const detectedSign   = dynamicMatch?.label || staticMatch?.label || null;
 
                     detectedEl.textContent = detectedSign
                         ? `Sign: ${detectedSign}`
-                        : `${results.landmarks.length} hand(s) tracked`;
+                        : builtinGesture
+                            ? `Gesture: ${builtinGesture}`
+                            : `${results.landmarks.length} hand(s) tracked`;
 
-                    evaluateSign(detectedSign);
+                    evaluateSign(detectedSign, builtinGesture);
                 } else {
                     latestPoseVector = null;
                     motionBuffer.length = 0;
