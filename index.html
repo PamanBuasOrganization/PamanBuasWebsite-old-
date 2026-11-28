@@ -16,7 +16,7 @@
 
         <!-- character infront of background-->
         <div class="vn-character">
-            <img id="story-sprite" src="images/silentvoice.jpg" alt="Guide Character">
+            <img id="story-sprite" src=null alt="Guide Character">
         </div>
     </div>
 
@@ -272,13 +272,12 @@
 
         // MUSIC HERE ANJAY
         const bgmTracks = [
-            { key: "menu",    title: "Main Theme",         src: "audio/music_1.mp3" },
-            { key: "mrbeast", title: "im mr beast.",       src: "audio/balls.mp3" },
-            { key: "idk",     title: "tuff",               src: "audio/music_2.mp3" },
-            { key: "secret",  title: "???",                src: "audio/tuff.mp3", image: "images/tuff.png", spin: true },
-            { key: "ponker",  title: "ponk",               src: "audio/ponks.mp3" },
-            { key: "ego",     title: "egoism is when no",  src: "audio/ego.mp3",  image: "images/maxwhenno.jpg" },
-            { key: "rus",     title: "h",                  src: "audio/kambing.mp3" }
+            { key: "menu",    title: "Main Theme",          src: "audio/music_1.mp3" },
+            { key: "umapyoi",  title: "umapyoi",            src: "audio/uma.mp3" },
+            { key: "idk",     title: "tuff",                src: "audio/music_2.mp3" },
+            { key: "rus",     title: "russian",             src: "audio/kambing.mp3" },
+            { key: "mrbeast", title: "paman buas.",        src: "audio/balls.mp3" },
+            { key: "secret",  title: "???",                 src: "audio/tuff.mp3", image: "images/tuff.png", spin: true }
         ];
 
         // Load saved volumes from localStorage (defaults: SFX 100%, Music 50%)
@@ -295,16 +294,39 @@
             updateMusicVisual(bgmTracks[currentTrackIndex]);
         });
 
+        const sfxPools = {};
+        const MAX_POOL_SIZE = 8;
+
         function playSFX(name, options = {}) {
             const src = sfxFiles[name];
             if (!src || sfxVolume <= 0) return;
 
-            const sound = new Audio(src);
+            if (!sfxPools[name]) {
+                sfxPools[name] = [];
+            }
+
+            const pool = sfxPools[name];
+            let sound = pool.find((el) => el.paused || el.ended);
+
+            if (!sound) {
+                if (pool.length < MAX_POOL_SIZE) {
+                    sound = new Audio(src);
+                    pool.push(sound);
+                } else {
+                    sound = pool.shift();
+                    pool.push(sound);
+                }
+            }
+
+            sound.pause();
+            sound.currentTime = 0;
             sound.volume = sfxVolume;
 
             //pitch variations for the dialogue
             if (options.pitchJitter){
                 sound.playbackRate = 1 + (Math.random() * 2 -1)* options.pitchJitter;
+            } else {
+                sound.playbackRate = 1;
             }
 
             sound.play().catch(() => {});
@@ -455,17 +477,11 @@
                 nextScreen: "#main", // Change to "#select-topic" if you uncomment #select-topic
                 lines: [
                     {
-                        name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
-                        size: "0vh",
-                        bg: "images/dokidoki.webp",
-                        text: "What a beautifull morning today is."
-                    },
-                    {
                         name: "Paman Buas",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "...",
+                        text: "test...  ...  ...kaboom!",
+
+                        //omb card start
                         paper: { //kertas pop up kyk gini MUKA W GANTI NANTI PLIS
                             html: `
                             <div class="paper-title">
@@ -511,6 +527,9 @@
                             </div>
                             `
                         }
+                        //omb card ends
+
+
                     },
                     {
                         name: "Paman Buas",
@@ -535,7 +554,7 @@
                     {
                         name: "{name}",
                         size: "0vh",
-                        bg: "images/omb_bg.jpg",
+                        bg: "images/black.jpg",
                         text: "It was around late august"
                     },
                     {
@@ -565,20 +584,81 @@
                     },
                     {
                         name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
-                        size: "120vh",
-                        text: "(girl approaches)"
-                    },
-                    {
-                        name: "girl ???",
                         size: "0vh",
-                        text: "(starts writing on a yellow sticky note)"
+                        text: "Truth be told, i dont even remember how i ended up here"
                     },
                     {
-                        name: "girl ??? in writing",
-                        size: "120vh",
+                        bg: "images/omb_bg.jpg",
+                        name: "{name}",
+                        size: "0vh",
+                        text: "(its so loud here)"
+                    },
+                    {
+                        name: "{name}",
+                        size: "0vh",
+                        text: "(i think im supposed to find my group)"
+                    },
+                    {
+                        name: "{name}",
+                        size: "0vh",
+                        text: "(i wish they could just find me instead)"
+                    },
+
+                    {
+                        name: "???",
+                        size: "0vh",
+                        text: "(someone taps your back)"
+                    },
+                    {
+                        name: "{name}",
                         sprite: "images/girl-peace-sign.png",
-                        text: "Hi whats ur name?"
+                        text: "he-Hey heyyy uh... um",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "i didn't hear you there",
+                        size: "120vh",
+                    },
+                    {
+                        name: "???",
+                        text: "...",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "(i dont think she can hear me admist all the noise)",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "I DIDNT HEAR YOU THEREE! hehe...uhh",
+                        size: "120vh",
+                    },
+                    {
+                        name: "???",
+                        text: "...",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "(is she deaf)?",
+                        size: "120vh",
+                    },
+                    {
+                        name: "{name}",
+                        text: "(nevermind)",
+                        size: "120vh",
+                    },
+                    {
+                        name: "???",
+                        text: "(starts writing on a yellow sticky note)",
+                        size: "120vh"
+                    },
+                    {
+                        name: "??? (in writing)",
+                        text: "hi whats ur name???",
+                        size: "120vh"
                     },
                     {
                         name: "{name}",
@@ -587,11 +667,11 @@
                         text: "Hi whats ur name?",
                         choices: [
                             {
-                                label: "say your name",
+                                label: "tell her my name",
                                 nextScene: "Timeline_1"
                             },
                             {
-                                label: "show card",
+                                label: "show namecard",
                                 action: () => { }, //add view omb card
                                 nextScene: "Timeline_2"
                             }
@@ -600,7 +680,7 @@
                 ]
             },
 
-            // Timeline 1
+            // say your name
             Timeline_1: {
                 nextScreen: "#main",
                 lines: [
@@ -612,31 +692,31 @@
                     },
                     {
                         name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(she waves her hand)"
+                        text: "(no response again)?"
                     },
                     {
-                        name: "girl ???",
-                        sprite: "images/girl-peace-sign.png",
+                        name: "???",
                         size: "120vh",
                         text: "(she points at herself, and then points at her card)" //add omb card for her
                     },
                     {
                         name: "{name}",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
                         text: "Celine... the third?"
                     },
                     {
                         name: "Celine III",
-                        sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(she laughs, then nods)"
+                        text: "(she looks at the face your making and laughs)"
                     },
                     {
                         name: "Celine III",
-                        sprite: "images/girl-peace-sign.png",
+                        size: "120vh",
+                        text: "she nods with a grin on her face ;)"
+                    },
+                    {
+                        name: "Celine III",
                         size: "120vh",
                         text: "(she points at your card)",
                         nextScene: "Timeline_2"
@@ -644,7 +724,7 @@
                 ]
             },
 
-            // Timeline 2
+            // show card
             Timeline_2: {
                 nextScreen: "#main",
                 lines: [
@@ -670,14 +750,8 @@
                         name: "Celine III",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(she gets annoyed)",
+                        text: "...", //annoyed face
                         affection: -15
-                    },
-                    {
-                        name: "Celine III",
-                        sprite: "images/girl-peace-sign.png",
-                        size: "120vh",
-                        text: "(then she points to her ear)"
                     },
                     {
                         name: "Celine III",
@@ -829,7 +903,7 @@
                         name: "{name}",
                         sprite: "images/girl-peace-sign.png",
                         size: "120vh",
-                        text: "(if only a girl could talk to her)"
+                        text: "(if only someone could talk to her)"
                     },
                     {
                         name: "{name}",
@@ -1077,7 +1151,7 @@
 
         // the typewriter function, 
         function typeDialogue(text, 
-        {   speed = 30,     //change speed, bigger number -> slower
+        {   speed = 35,     //change typewriter delay, bigger number -> slower
             voice = "mc", //change sound
             choices = null 
         } = {}) {
@@ -1119,12 +1193,12 @@
                     return;
                 }
 
-                // Indie-game punctuation pauses
+                // Indie game punctuation pauses
                 let delay = speed;
                 if (char === "." || char === "!" || char === "?") {
-                    delay = speed * 5;
+                    delay = speed * 15;
                 } else if (char === ",") {
-                    delay = speed * 2.5;
+                    delay = speed * 10;
                 }
 
                 typingTimer = setTimeout(typeNextChar, delay);
@@ -1233,8 +1307,8 @@
             updatePaper(line.paper);
 
             typeDialogue(resolvedText, {
-                speed: line.speed ?? 30,
-                voice: line.voice !== undefined ? line.voice : "blip",
+                speed: line.speed,
+                voice: line.voice,
                 choices: line.choices
             });
 
